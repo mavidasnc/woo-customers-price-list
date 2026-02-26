@@ -1,0 +1,336 @@
+/**
+ * WooCommerce Dynamic Price List Pro — Admin Stylesheet
+ *
+ * Minimal custom styles layered on top of WordPress's built-in admin CSS.
+ * Uses WordPress admin color variables where available for consistency.
+ *
+ * Naming convention: .wdplp- prefix for all custom classes.
+ *
+ * @package WDPLP
+ * @since   1.0.0
+ */
+
+/* ==========================================================================
+   Page Wrapper
+   ========================================================================== */
+
+.wdplp-wrap .nav-tab-wrapper {
+    margin-bottom: 0;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.wdplp-tab-content {
+    padding-top: 20px;
+}
+
+/* ==========================================================================
+   Cards (postbox style)
+   ========================================================================== */
+
+.wdplp-card {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.wdplp-card .postbox-header {
+    border-bottom: 1px solid #dcdcde;
+}
+
+.wdplp-card .postbox-header .hndle {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.wdplp-card .inside {
+    padding: 16px;
+    margin: 0;
+}
+
+/* ==========================================================================
+   Import Form
+   ========================================================================== */
+
+.wdplp-source-fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0 0 16px 0;
+}
+
+.wdplp-source-fieldset legend {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.wdplp-radio-label {
+    display: block;
+    margin-bottom: 6px;
+    cursor: pointer;
+}
+
+.wdplp-radio-label input[type="radio"] {
+    margin-right: 6px;
+}
+
+.wdplp-input-section {
+    transition: opacity 0.15s ease;
+}
+
+.wdplp-input-section .form-table th {
+    padding-left: 0;
+    width: 140px;
+}
+
+.wdplp-file-input {
+    max-width: 400px;
+}
+
+/* Submit area with spinner */
+.submit .wdplp-spinner {
+    float: none;
+    margin: 4px 0 0 8px;
+    vertical-align: middle;
+}
+
+/* ==========================================================================
+   Import Result Notice
+   ========================================================================== */
+
+.wdplp-import-notice {
+    padding: 12px 16px;
+}
+
+.wdplp-import-notice h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+}
+
+/* Stats table inside the notice */
+.wdplp-stats-table {
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.wdplp-stats-table th,
+.wdplp-stats-table td {
+    padding: 4px 16px 4px 0;
+    font-size: 13px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.wdplp-stats-table th {
+    color: #50575e;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.wdplp-sku-list {
+    font-family: monospace;
+    font-size: 12px;
+    word-break: break-word;
+}
+
+/* Collapsible error details */
+.wdplp-error-details {
+    margin-top: 10px;
+}
+
+.wdplp-error-details summary {
+    cursor: pointer;
+    font-size: 12px;
+    color: #646970;
+}
+
+.wdplp-error-details ul {
+    margin: 8px 0 0 16px;
+    font-size: 12px;
+    font-family: monospace;
+}
+
+.wdplp-err-error {
+    color: #d63638;
+}
+
+.wdplp-err-warning {
+    color: #9c7000;
+}
+
+/* ==========================================================================
+   CSV Example Table (reference card)
+   ========================================================================== */
+
+.wdplp-example-table {
+    max-width: 600px;
+    margin-bottom: 12px;
+}
+
+.wdplp-example-table thead th {
+    background: #f6f7f7;
+    font-weight: 600;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.wdplp-example-table td {
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.wdplp-legend {
+    list-style: disc;
+    margin-left: 20px;
+    font-size: 13px;
+    color: #50575e;
+}
+
+.wdplp-legend li {
+    margin-bottom: 4px;
+}
+
+/* ==========================================================================
+   Import History Table
+   ========================================================================== */
+
+.wdplp-history-table th.num,
+.wdplp-history-table td.num {
+    text-align: right;
+    width: 130px;
+}
+
+/* ==========================================================================
+   Log File Viewer
+   ========================================================================== */
+
+.wdplp-log-selector-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.wdplp-log-selector-form label {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.wdplp-log-meta {
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #50575e;
+}
+
+.wdplp-log-filename {
+    font-family: monospace;
+    font-weight: 600;
+}
+
+.wdplp-log-lines {
+    color: #646970;
+}
+
+.wdplp-log-content {
+    background: #1d2327;
+    color: #90ee90; /* green-on-dark terminal aesthetic */
+    padding: 14px 16px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    max-height: 500px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border: 1px solid #3c434a;
+    tab-size: 4;
+}
+
+/* ==========================================================================
+   Empty State
+   ========================================================================== */
+
+.wdplp-empty-state {
+    color: #646970;
+    font-style: italic;
+    margin: 10px 0;
+}
+
+/* ==========================================================================
+   Data Table (Price List Viewer)
+   ========================================================================== */
+
+.wdplp-data-table {
+    margin-top: 12px;
+}
+
+.wdplp-data-table .wdplp-col-id {
+    width: 60px;
+}
+
+.wdplp-data-table .wdplp-col-sku {
+    width: 180px;
+}
+
+.wdplp-data-table .wdplp-col-cod {
+    width: 120px;
+}
+
+.wdplp-data-table .wdplp-col-price {
+    width: 100px;
+    text-align: right;
+}
+
+.wdplp-data-table .wdplp-col-date {
+    width: 110px;
+}
+
+.wdplp-data-table .wdplp-col-created {
+    width: 160px;
+    color: #646970;
+    font-size: 12px;
+}
+
+.wdplp-data-table code {
+    background: transparent;
+    padding: 0;
+    font-size: 12px;
+}
+
+/* Pagination bar */
+.wdplp-pagination-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.wdplp-pagination-bar--bottom {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.wdplp-pagination-info {
+    font-size: 13px;
+    color: #50575e;
+    margin-right: auto;
+}
+
+.wdplp-pagination-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wdplp-page-indicator {
+    font-size: 13px;
+    color: #50575e;
+    padding: 0 4px;
+}
+
+.wdplp-no-data {
+    color: #646970;
+    font-style: italic;
+    margin: 10px 0;
+}

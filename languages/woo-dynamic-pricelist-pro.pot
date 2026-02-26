@@ -1,0 +1,387 @@
+# WooCommerce Dynamic Price List Pro — Translation Template
+# Copyright (C) 2025 Mavida s.n.c.
+# This file is distributed under the GPL-2.0-or-later license.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Dynamic Price List Pro 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-26 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Manual\n"
+"X-Domain: woo-dynamic-pricelist-pro\n"
+
+#. translators: 1: Plugin name, 2: Required PHP version, 3: Current PHP version
+#: woo-dynamic-pricelist-pro.php:41
+msgid "%1$s requires PHP %2$s or higher. You are running PHP %3$s. Please upgrade PHP or deactivate the plugin."
+msgstr ""
+
+#. translators: %s: WooCommerce plugin name
+#: includes/Plugin.php:257
+msgid "<strong>WooCommerce Dynamic Price List Pro</strong> requires %s to be installed and active."
+msgstr ""
+
+#. translators: 1: Plugin name, 2: Required WooCommerce version, 3: Installed WooCommerce version
+#: includes/Plugin.php:279
+msgid "%1$s requires WooCommerce %2$s or higher. You are running WooCommerce %3$s."
+msgstr ""
+
+#: includes/Plugin.php:282
+msgid "unknown"
+msgstr ""
+
+#: src/Admin/AdminController.php:96
+#: src/Admin/AdminController.php:97
+#: src/Admin/AdminController.php:189
+msgid "Price Lists"
+msgstr ""
+
+#: src/Admin/AdminController.php:145
+msgid "Importing, please wait…"
+msgstr ""
+
+#: src/Admin/AdminController.php:227
+msgid "Import"
+msgstr ""
+
+#: src/Admin/AdminController.php:228
+msgid "Logs & History"
+msgstr ""
+
+#: src/Admin/AdminController.php:229
+msgid "Data"
+msgstr ""
+
+#: src/Admin/ImportPage.php:108
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: src/Admin/ImportPage.php:109
+msgid "Permission Denied"
+msgstr ""
+
+#: src/Admin/ImportPage.php:137
+msgid "Please enter a valid CSV URL to import from."
+msgstr ""
+
+#: src/Admin/ImportPage.php:139
+msgid "The URL provided is not valid or is not allowed."
+msgstr ""
+
+#: src/Admin/ImportPage.php:148
+msgid "Please select a CSV file to upload."
+msgstr ""
+
+#. translators: %d: PHP file upload error code (see https://www.php.net/manual/en/features.file-upload.errors.php)
+#: src/Admin/ImportPage.php:152
+msgid "File upload failed with error code %d. Please try again."
+msgstr ""
+
+#: src/Admin/ImportPage.php:160
+msgid "Invalid file type. Please upload a .csv or .txt file."
+msgstr ""
+
+#: src/User/UserProfileField.php:111
+msgid "Price List Settings"
+msgstr ""
+
+#: src/User/UserProfileField.php:117
+msgid "Assigned Price List"
+msgstr ""
+
+#. translators: %s: URL of the Price Lists admin import page
+#: src/User/UserProfileField.php:130
+msgid "No price lists found. <a href=\"%s\">Import a CSV</a> to populate the list."
+msgstr ""
+
+#: src/User/UserProfileField.php:146
+msgid "No price list assigned"
+msgstr ""
+
+#: src/User/UserProfileField.php:162
+msgid "Determines which price list prices are shown to this user on the frontend."
+msgstr ""
+
+#. translators: %s: the stale price list code (COD) stored in user meta
+#: src/User/UserProfileField.php:176
+msgid "The previously assigned list \"%s\" is no longer active. Please re-assign or select \"No price list assigned\" to clear it."
+msgstr ""
+
+#: src/Frontend/PriceHooks.php:170
+msgid "Login to see prices"
+msgstr ""
+
+#. translators: %s: absolute path to the CSV file
+#: src/Import/CsvImporter.php:205
+msgid "File not found or not readable: \"%s\"."
+msgstr ""
+
+#. translators: %s: absolute path to the CSV file
+#: src/Import/CsvImporter.php:358
+msgid "Could not open CSV file: \"%s\"."
+msgstr ""
+
+#: src/Import/CsvImporter.php:368
+msgid "CSV file appears to be empty."
+msgstr ""
+
+#: src/Import/CsvImporter.php:381
+msgid "CSV file has no header row."
+msgstr ""
+
+#: admin/views/import-page.php:37
+msgid "Import Completed"
+msgstr ""
+
+#: admin/views/import-page.php:42
+msgid "Total rows processed"
+msgstr ""
+
+#: admin/views/import-page.php:46
+msgid "WooCommerce prices updated"
+msgstr ""
+
+#: admin/views/import-page.php:50
+msgid "Price list rows inserted/updated"
+msgstr ""
+
+#: admin/views/import-page.php:54
+msgid "Rows skipped"
+msgstr ""
+
+#: admin/views/import-page.php:58
+msgid "SKUs not found in WooCommerce"
+msgstr ""
+
+#: admin/views/import-page.php:72
+msgid "Duration"
+msgstr ""
+
+#. translators: %d: number of error/warning messages
+#: admin/views/import-page.php:86
+msgid "View %d error/warning message(s)"
+msgstr ""
+
+#. translators: %d: CSV row number where the error occurred
+#: admin/views/import-page.php:95
+msgid "Row %d:"
+msgstr ""
+
+#: admin/views/import-page.php:112
+msgid "Import Price List CSV"
+msgstr ""
+
+#: admin/views/import-page.php:120
+msgid "Upload a CSV file or provide a URL. The CSV must include a SKU column and a LORDO column. All other columns (e.g. L40, L45, L50N1) are treated as price list codes."
+msgstr ""
+
+#: admin/views/import-page.php:127
+msgid "Example header row:"
+msgstr ""
+
+#: admin/views/import-page.php:145
+msgid "Import source"
+msgstr ""
+
+#: admin/views/import-page.php:155
+msgid "Upload a file from your computer"
+msgstr ""
+
+#: admin/views/import-page.php:165
+msgid "Import from a remote URL"
+msgstr ""
+
+#: admin/views/import-page.php:175
+msgid "CSV File"
+msgstr ""
+
+#: admin/views/import-page.php:187
+msgid "Accepted formats: .csv, .txt (UTF-8 or Windows-1252 encoding, comma or semicolon delimiter)."
+msgstr ""
+
+#: admin/views/import-page.php:200
+msgid "CSV URL"
+msgstr ""
+
+#: admin/views/import-page.php:212
+msgid "The URL must be publicly accessible. HTTPS is strongly recommended."
+msgstr ""
+
+#: admin/views/import-page.php:224
+msgid "Row limit"
+msgstr ""
+
+#: admin/views/import-page.php:238
+msgid "Maximum number of CSV rows to import (0 = no limit). Useful for testing a portion of a large file."
+msgstr ""
+
+#: admin/views/import-page.php:251
+msgid "Import Price List"
+msgstr ""
+
+#: admin/views/import-page.php:264
+msgid "CSV Format Reference"
+msgstr ""
+
+#: admin/views/import-page.php:297
+msgid "WooCommerce product SKU. Case-insensitive column header."
+msgstr ""
+
+#: admin/views/import-page.php:301
+msgid "Gross price. Updates WooCommerce regular price. Case-insensitive."
+msgstr ""
+
+#: admin/views/import-page.php:305
+msgid "Price list codes. Any other column header is stored as a list code. Empty cells are skipped."
+msgstr ""
+
+#: admin/views/logs-page.php:35
+msgid "Import History"
+msgstr ""
+
+#: admin/views/logs-page.php:41
+msgid "No import history found. Run your first import to see activity here."
+msgstr ""
+
+#: admin/views/logs-page.php:47
+msgid "Import Date"
+msgstr ""
+
+#: admin/views/logs-page.php:48
+msgid "Distinct SKUs"
+msgstr ""
+
+#: admin/views/logs-page.php:49
+msgid "Total Rows"
+msgstr ""
+
+#: admin/views/logs-page.php:63
+msgid "Showing the last 30 import dates. Statistics are based on the created_at column in the price list table."
+msgstr ""
+
+#: admin/views/logs-page.php:73
+msgid "Log File Viewer"
+msgstr ""
+
+#: admin/views/logs-page.php:79
+msgid "No log files found. Log files are created automatically on the first import."
+msgstr ""
+
+#: admin/views/logs-page.php:89
+msgid "Select log file:"
+msgstr ""
+
+#: admin/views/logs-page.php:109
+msgid "Load"
+msgstr ""
+
+#. translators: %d: number of log lines currently displayed in the viewer
+#: admin/views/logs-page.php:126
+msgid "%d lines shown"
+msgstr ""
+
+#: admin/views/logs-page.php:136
+msgid "This log file is empty or could not be read."
+msgstr ""
+
+#: admin/views/data-page.php:68
+msgid "Filter Price List Data"
+msgstr ""
+
+#: admin/views/data-page.php:79
+#: admin/views/data-page.php:207
+msgid "SKU"
+msgstr ""
+
+#: admin/views/data-page.php:88
+msgid "Partial SKU (e.g. PROD-0)"
+msgstr ""
+
+#: admin/views/data-page.php:94
+msgid "Price List Code"
+msgstr ""
+
+#: admin/views/data-page.php:98
+msgid "— All codes —"
+msgstr ""
+
+#: admin/views/data-page.php:114
+msgid "Apply Filters"
+msgstr ""
+
+#: admin/views/data-page.php:118
+msgid "Reset"
+msgstr ""
+
+#. translators: %d: total number of rows matching the active filters
+#: admin/views/data-page.php:133
+msgid "Price List Rows (%d total)"
+msgstr ""
+
+#: admin/views/data-page.php:145
+msgid "No rows match the current filters."
+msgstr ""
+
+#: admin/views/data-page.php:147
+msgid "No price list data found. Import a CSV file to get started."
+msgstr ""
+
+#. translators: 1: first row number on this page, 2: last row number on this page, 3: total matching rows
+#: admin/views/data-page.php:160
+msgid "Showing %1$d\u{2013}%2$d of %3$d rows"
+msgstr ""
+
+#: admin/views/data-page.php:172
+#: admin/views/data-page.php:237
+msgid "First"
+msgstr ""
+
+#: admin/views/data-page.php:175
+#: admin/views/data-page.php:240
+msgid "Prev"
+msgstr ""
+
+#. translators: 1: current page number, 2: total page count
+#: admin/views/data-page.php:183
+#: admin/views/data-page.php:248
+msgid "Page %1$d of %2$d"
+msgstr ""
+
+#: admin/views/data-page.php:192
+#: admin/views/data-page.php:257
+msgid "Next"
+msgstr ""
+
+#: admin/views/data-page.php:195
+#: admin/views/data-page.php:260
+msgid "Last"
+msgstr ""
+
+#: admin/views/data-page.php:206
+msgid "ID"
+msgstr ""
+
+#: admin/views/data-page.php:208
+msgid "Code"
+msgstr ""
+
+#: admin/views/data-page.php:209
+msgid "Price"
+msgstr ""
+
+#: admin/views/data-page.php:210
+msgid "Valid From"
+msgstr ""
+
+#: admin/views/data-page.php:211
+msgid "Imported At"
+msgstr ""
