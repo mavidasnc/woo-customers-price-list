@@ -7,6 +7,28 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.3.3] — 2026-03-02
+
+### Added
+
+- **Select2 sui filtri sidebar WooCommerce** (`src/Frontend/FrontendAssets.php`,
+  `public/js/wdplp-public.js`, `public/vendor/select2/`):
+  Select2 v4.1.0-rc.0 viene caricato come libreria locale (CSS + JS + locale italiano).
+  Il plugin inizializza automaticamente ogni `<select>` dentro `#sidebar` che non sia
+  già stato migliorato da altri script (guard `.select2-hidden-accessible`).
+  - Search box sempre visibile (`minimumResultsForSearch: 0`)
+  - Larghezza al 100% del contenitore
+  - Localizzazione italiana (`language: 'it'`)
+- **`public/js/wdplp-public.js`**: nuovo script frontend con la funzione
+  `initSidebarSelects()`. Tutte le dipendenze (jquery, Select2, locale it) sono
+  dichiarate via `wp_enqueue_script`.
+- **`package.json` — script `copy-vendor`**: copia automaticamente i file Select2 da
+  `node_modules/` a `public/vendor/select2/` durante il build
+  (`npm run build` e `npm run build:prod`). I file vendor sono committati in git
+  per il deploy in produzione (senza npm).
+
+---
+
 ## [1.3.2] — 2026-03-02
 
 ### Fixed
@@ -145,6 +167,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - PSR-4-style autoloader (no Composer dependency).
 - `uninstall.php`: drops table, deletes options, removes all `_assigned_price_list` user meta on full delete.
 
+[1.3.3]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.2.0...v1.3.0
