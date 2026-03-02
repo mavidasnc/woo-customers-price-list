@@ -1,0 +1,28 @@
+// =============================================================================
+// Cards — postbox-style containers
+//
+// @package WDPLP
+// @since   1.3.0
+// =============================================================================
+
+@use 'variables' as v;
+
+.wdplp-card {
+  margin-top: v.$spacing-xl;
+  margin-bottom: v.$spacing-xl;
+
+  .postbox-header {
+    border-bottom: 1px solid v.$color-wp-border-light;
+
+    .hndle {
+      padding: v.$spacing-md v.$spacing-lg;
+      font-size: v.$font-size-base;
+      font-weight: 600;
+    }
+  }
+
+  .inside {
+    padding: v.$spacing-lg;
+    margin: 0;
+  }
+}

@@ -1,0 +1,34 @@
+// =============================================================================
+// Variables
+//
+// Colori WP admin standard. Non si usa --wp-admin-theme-color poiché cambia
+// con il color scheme scelto dall'utente.
+//
+// @package WDPLP
+// @since   1.3.0
+// =============================================================================
+
+// ── Typography ────────────────────────────────────────────────────────────────
+$font-mono:      'Courier New', Courier, monospace;
+$font-size-sm:   12px;
+$font-size-base: 13px;
+
+// ── WordPress admin palette ───────────────────────────────────────────────────
+$color-wp-dark:         #1d2327;  // log terminal background
+$color-wp-gray-dark:    #3c434a;  // log terminal border
+$color-wp-gray-mid:     #50575e;  // labels, meta text
+$color-wp-gray:         #646970;  // secondary text
+$color-wp-border:       #c3c4c7;  // tab nav border
+$color-wp-border-light: #dcdcde;  // card header border
+$color-wp-table-head:   #f6f7f7;  // table thead background
+
+// ── Semantic ──────────────────────────────────────────────────────────────────
+$color-error:    #d63638;
+$color-warning:  #9c7000;
+$color-log-text: #90ee90;         // terminal green
+
+// ── Spacing ───────────────────────────────────────────────────────────────────
+$spacing-sm: 6px;
+$spacing-md: 12px;
+$spacing-lg: 16px;
+$spacing-xl: 20px;

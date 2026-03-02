@@ -216,6 +216,11 @@ final class Plugin {
 	 * @return void
 	 */
 	private function register_frontend_hooks(): void {
+		// Public stylesheet (WooCommerce pages only).
+		if ( class_exists( \WDPLP\Frontend\FrontendAssets::class ) ) {
+			( new \WDPLP\Frontend\FrontendAssets() )->register_hooks();
+		}
+
 		// Price display: hides prices for guests, applies list price for users.
 		if ( class_exists( \WDPLP\Frontend\PriceHooks::class ) ) {
 			( new \WDPLP\Frontend\PriceHooks() )->register_hooks();

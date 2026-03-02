@@ -86,6 +86,16 @@ if [[ "$DRY_RUN" == false ]]; then
   esac
 fi
 
+# ── Build CSS assets (production) ────────────────────────────────────────────
+# Run only on live deploy — compresses SCSS to public/css and admin/css before
+# uploading. Skipped in dry-run since no files are transferred anyway.
+if [[ "$DRY_RUN" == false ]]; then
+  echo "Building CSS assets (npm run build:prod)..."
+  npm run build:prod
+  echo "CSS build complete."
+  echo "--------------------------------------------------------"
+fi
+
 # ── Run lftp mirror ───────────────────────────────────────────────────────────
 # Files excluded from the deploy (dev/meta files with no purpose on production):
 #   CLAUDE.md, CHANGES.md, README.md  — documentation for developers
@@ -93,6 +103,9 @@ fi
 #   deploy.sh, .env.deploy*            — deployment infrastructure
 #   *.log                              — any stray log files in the project root
 #   .gitkeep                           — empty-folder placeholders
+#   node_modules/                      — npm local packages (not needed on server)
+#   package.json, package-lock.json   — npm build config (not needed on server)
+#   admin/scss/, public/scss/         — SCSS sources (compiled CSS is deployed)
 
 MIRROR_FLAGS="--reverse --delete --verbose --parallel=4"
 [[ "$DRY_RUN" == true ]] && MIRROR_FLAGS="$MIRROR_FLAGS --dry-run"
@@ -116,6 +129,11 @@ mirror $MIRROR_FLAGS \
   --exclude-glob .env.deploy.example \
   --exclude-glob '*.log' \
   --exclude-glob .gitkeep \
+  --exclude-glob package.json \
+  --exclude-glob package-lock.json \
+  --exclude node_modules/ \
+  --exclude admin/scss/ \
+  --exclude public/scss/ \
   "$LOCAL_DIR" "$REMOTE_DIR"
 
 bye

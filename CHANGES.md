@@ -7,6 +7,55 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.3.2] — 2026-03-02
+
+### Fixed
+
+- **Frontend CSS non caricato su pagine WooCommerce** (`src/Frontend/FrontendAssets.php`):
+  rimossa la dipendenza da `woocommerce-general`. Alcuni temi integrano WooCommerce
+  deregistrando quell'handle CSS; WordPress omette silenziosamente qualsiasi stylesheet
+  la cui dipendenza non sia registrata, impedendo il caricamento di `wdplp-public.css`.
+  Poiché i selettori del plugin (`.uc-filter-num`) non sovrascrivono stili WooCommerce
+  core, l'ordine di caricamento è irrilevante e la dipendenza non è necessaria.
+
+---
+
+## [1.3.1] — 2026-03-02
+
+### Added
+
+- **`.filter-3-columns` modifier** (`public/scss/wdplp-public.scss`): aggiungendo la classe
+  `filter-3-columns` al contenitore `.filter-num` la griglia passa da 5 a 3 colonne
+  (`.filter-num.filter-3-columns ul { grid-template-columns: repeat(3, 1fr) }`).
+- **`font-size: 11px` su `.filter-num ul li`**: dimensione testo ridotta per adattarsi meglio
+  alla griglia compatta dei filtri numerici/taglia.
+- **SCSS compilation in `deploy.sh`**: il deploy live esegue automaticamente
+  `npm run build:prod` prima di trasferire i file, garantendo che i CSS compressi
+  siano sempre aggiornati. I sorgenti SCSS (`admin/scss/`, `public/scss/`) e
+  `node_modules/` sono ora esclusi dal mirror FTP.
+
+---
+
+## [1.3.0] — 2026-03-02
+
+### Added
+
+- **SCSS build system** (`admin/scss/`): il CSS admin è ora gestito tramite SCSS modulare.
+  Entry point `admin/scss/wdplp-admin.scss` importa 8 file parziali (`_variables`,
+  `_layout`, `_cards`, `_forms`, `_notices`, `_tables`, `_logs`, `_pagination`).
+  Usa `@use` con namespace (`v.$color-*`, `v.$spacing-*`) invece del deprecato `@import`.
+  Compilare con: `npm install && npm run build` (o `npm run watch` in sviluppo,
+  `npm run build:prod` per produzione compressa). NON editare `admin/css/wdplp-admin.css`
+  direttamente.
+- **Frontend stylesheet** (`public/scss/wdplp-public.scss`, `src/Frontend/FrontendAssets.php`):
+  nuovo CSS pubblico caricato **solo sulle pagine WooCommerce** (shop, prodotto,
+  tassonomie prodotto, carrello, checkout) tramite dipendenza su `woocommerce-general`.
+  Contiene gli stili per `.filter-num` (griglia 5 colonne per filtri numerici/taglia con
+  stato `.chosen` evidenziato e conteggio `.count` nascosto).
+- `package.json` con `devDependency: sass ^1.77`: script `build`, `watch`, `build:prod`.
+
+---
+
 ## [1.2.0] — 2026-03-02
 
 ### Fixed
@@ -96,6 +145,9 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - PSR-4-style autoloader (no Composer dependency).
 - `uninstall.php`: drops table, deletes options, removes all `_assigned_price_list` user meta on full delete.
 
+[1.3.2]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.1...v1.3.2
+[1.3.1]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.0...v1.3.1
+[1.3.0]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/your-username/woo-dynamic-pricelist-pro/releases/tag/v1.0.0

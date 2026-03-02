@@ -1,0 +1,32 @@
+/**
+ * WooCommerce Dynamic Price List Pro — Admin Stylesheet (SCSS entry point)
+ *
+ * DO NOT EDIT admin/css/wdplp-admin.css directly.
+ * Edit the source files in admin/scss/ and compile with:
+ *
+ *   npm run build       — development (expanded, no source maps)
+ *   npm run watch       — watch mode for development
+ *   npm run build:prod  — production (compressed)
+ *
+ * Partial files (loaded in order):
+ *   _variables  — colour palette, typography, spacing tokens
+ *   _layout     — page wrapper, tab navigation
+ *   _cards      — postbox-style card containers
+ *   _forms      — import form, radio labels, file/URL inputs, spinner
+ *   _notices    — import result notice, stats table, error details
+ *   _tables     — CSV example, import history, data table, empty states
+ *   _logs       — log file viewer (terminal style)
+ *   _pagination — pagination bar (data tab)
+ *
+ * @package WDPLP
+ * @since   1.3.0
+ */
+
+@use 'variables';
+@use 'layout';
+@use 'cards';
+@use 'forms';
+@use 'notices';
+@use 'tables';
+@use 'logs';
+@use 'pagination';

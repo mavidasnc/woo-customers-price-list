@@ -1,0 +1,14 @@
+{
+  "name": "woo-dynamic-pricelist-pro",
+  "version": "1.3.0",
+  "description": "Build tools for WooCommerce Dynamic Price List Pro",
+  "private": true,
+  "scripts": {
+    "build": "sass admin/scss/wdplp-admin.scss:admin/css/wdplp-admin.css public/scss/wdplp-public.scss:public/css/wdplp-public.css --style=expanded --no-source-map",
+    "watch": "sass --watch admin/scss/wdplp-admin.scss:admin/css/wdplp-admin.css public/scss/wdplp-public.scss:public/css/wdplp-public.css --style=expanded --no-source-map",
+    "build:prod": "sass admin/scss/wdplp-admin.scss:admin/css/wdplp-admin.css public/scss/wdplp-public.scss:public/css/wdplp-public.css --style=compressed --no-source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
+  }
+}

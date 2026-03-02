@@ -1,0 +1,49 @@
+// =============================================================================
+// Import Form — fieldset, radio labels, file/URL inputs, spinner
+//
+// @package WDPLP
+// @since   1.3.0
+// =============================================================================
+
+@use 'variables' as v;
+
+.wdplp-source-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 v.$spacing-lg 0;
+
+  legend {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+}
+
+.wdplp-radio-label {
+  display: block;
+  margin-bottom: v.$spacing-sm;
+  cursor: pointer;
+
+  input[type="radio"] {
+    margin-right: v.$spacing-sm;
+  }
+}
+
+.wdplp-input-section {
+  transition: opacity 0.15s ease;
+
+  .form-table th {
+    padding-left: 0;
+    width: 140px;
+  }
+}
+
+.wdplp-file-input {
+  max-width: 400px;
+}
+
+// Submit area spinner
+.submit .wdplp-spinner {
+  float: none;
+  margin: 4px 0 0 8px;
+  vertical-align: middle;
+}

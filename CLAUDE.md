@@ -4,6 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
+## Build Tools (SCSS)
+
+SCSS sorgente in `admin/scss/` e `public/scss/`. CSS compilato (output) in `admin/css/` e `public/css/`.
+**NON modificare i file `.css` direttamente** — editare i `.scss` e compilare.
+
+```bash
+npm install          # installa dart-sass (prima volta)
+npm run build        # compila tutti gli SCSS — expanded, no source map
+npm run watch        # watch mode per sviluppo
+npm run build:prod   # compila compresso per produzione
+```
+
+| Sorgente SCSS | Output CSS compilato |
+|---|---|
+| `admin/scss/wdplp-admin.scss` | `admin/css/wdplp-admin.css` |
+| `public/scss/wdplp-public.scss` | `public/css/wdplp-public.css` |
+
+I file CSS compilati **vanno committati** nel repo (produzione non ha npm).
+`node_modules/` è già in `.gitignore`.
+
+---
+
 ## Common Commands
 
 ### Syntax check a single file
@@ -55,7 +77,7 @@ Plugin::initialize()
   └── checks WooCommerce active + version (>= 7.0)
   └── WP_CLI context   → PriceListCommand registered via WP_CLI::add_command()
   └── is_admin()       → AdminController + ImportPage + LogsPage (hooks) + UserProfileField
-  └── else (frontend)  → PriceHooks + CartConsistency
+  └── else (frontend)  → FrontendAssets + PriceHooks + CartConsistency
 ```
 
 All component instantiation in `Plugin.php` is wrapped in `class_exists()` guards — new classes can be added incrementally without breaking the active plugin.
@@ -113,7 +135,7 @@ Table name: `{$wpdb->prefix}custom_price_lists`
 
 | Constant | Value |
 |---|---|
-| `WDPLP_VERSION` | `'1.2.0'` |
+| `WDPLP_VERSION` | `'1.3.2'` |
 | `WDPLP_PLUGIN_DIR` | `plugin_dir_path(__FILE__)` (trailing slash) |
 | `WDPLP_PLUGIN_URL` | `plugin_dir_url(__FILE__)` (trailing slash) |
 | `WDPLP_PLUGIN_FILE` | `__FILE__` of bootstrap |

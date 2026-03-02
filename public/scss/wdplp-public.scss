@@ -1,0 +1,75 @@
+/**
+ * WooCommerce Dynamic Price List Pro — Frontend Stylesheet
+ *
+ * Loaded only on WooCommerce pages (shop, product, cart, checkout).
+ * See src/Frontend/FrontendAssets.php for the enqueue logic.
+ *
+ * DO NOT EDIT public/css/wdplp-public.css directly.
+ * Edit this source file and compile with:
+ *
+ *   npm run build       — development (expanded, no source maps)
+ *   npm run watch       — watch mode for development
+ *   npm run build:prod  — production (compressed)
+ *
+ * @package WDPLP
+ * @since   1.3.0
+ */
+
+// ── Filtro numerico (griglia per filtri per numero/taglia) ───────────────────
+//
+// Struttura HTML attesa:
+//   <div class="filter-num [filter-3-columns]">
+//     <ul>
+//       <li [class="chosen"]><a href="...">42</a> <span class="count">(3)</span></li>
+//       ...
+//     </ul>
+//   </div>
+//
+// Classi modificatori:
+//   (nessuna)           → griglia 5 colonne (default)
+//   .filter-3-columns   → griglia 3 colonne
+// ─────────────────────────────────────────────────────────────────────────────
+.uc-filter-num {
+  ul {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5em;
+
+    li {
+      font-size: 11px;
+      border: 1px solid;
+      border-radius: 10px;
+      justify-content: center;
+      background-color: white;
+      border-color: #d9d9d9;
+
+      a {
+        width: 100%;
+        text-align: center;
+        display: block;
+        padding: 5px;
+
+        // Rimuove eventuali pseudo-elementi aggiunti dal tema (es. frecce)
+        &::before {
+          content: none;
+        }
+      }
+
+      // Nasconde il conteggio prodotti (es. "(3)")
+      .count {
+        display: none;
+      }
+
+      // Stato attivo/selezionato
+      &.chosen {
+        background-color: #d9d9d9;
+        border-color: #646666;
+      }
+    }
+  }
+
+  // Variante 3 colonne — aggiungere .filter-3-columns al contenitore
+  &.uc-filter-3-columns ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
