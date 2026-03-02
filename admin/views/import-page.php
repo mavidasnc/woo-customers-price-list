@@ -9,6 +9,9 @@
  *                           or an empty array if no import has run yet.
  *   $action_url  (string) — Escaped URL of admin-post.php.
  *   $nonce       (string) — Nonce value for the hidden nonce field.
+ *   $last_source (string) — Last used source: 'file' or 'url' (from user meta).
+ *   $last_url    (string) — Last used remote URL (from user meta).
+ *   $last_limit  (int)    — Last used row limit (from user meta).
  *
  * Security: all dynamic output is escaped with esc_html() / esc_attr() / esc_url().
  *
@@ -21,8 +24,12 @@ if (!defined('ABSPATH')) {
 }
 
 // Ensure required variables are available.
-$result = $result ?? [];
-$action_url = $action_url ?? esc_url(admin_url('admin-post.php'));
+$result      = $result      ?? [];
+$action_url  = $action_url  ?? esc_url( admin_url( 'admin-post.php' ) );
+// Per-user import preferences (populated by ImportPage::render_content).
+$last_source = $last_source ?? 'file';
+$last_url    = $last_url    ?? '';
+$last_limit  = $last_limit  ?? 0;
 ?>
 
 <?php // ── Import result notice ───────────────────────────────────────────?>
@@ -150,7 +157,7 @@ $action_url = $action_url ?? esc_url(admin_url('admin-post.php'));
 						name="wdplp_source"
 						value="file"
 						id="wdplp_source_file"
-						checked
+						<?php checked( $last_source, 'file' ); ?>
 					>
 					<?php esc_html_e('Upload a file from your computer', WDPLP_TEXT_DOMAIN); ?>
 				</label>
@@ -161,6 +168,7 @@ $action_url = $action_url ?? esc_url(admin_url('admin-post.php'));
 						name="wdplp_source"
 						value="url"
 						id="wdplp_source_url"
+						<?php checked( $last_source, 'url' ); ?>
 					>
 					<?php esc_html_e('Import from a remote URL', WDPLP_TEXT_DOMAIN); ?>
 				</label>
@@ -207,6 +215,7 @@ $action_url = $action_url ?? esc_url(admin_url('admin-post.php'));
 								id="wdplp_url"
 								class="regular-text"
 								placeholder="https://example.com/prices.csv"
+								value="<?php echo esc_attr( $last_url ); ?>"
 							>
 							<p class="description">
 								<?php esc_html_e('The URL must be publicly accessible. HTTPS is strongly recommended.', WDPLP_TEXT_DOMAIN); ?>
@@ -229,7 +238,7 @@ $action_url = $action_url ?? esc_url(admin_url('admin-post.php'));
 							type="number"
 							name="wdplp_limit_rows"
 							id="wdplp_limit_rows"
-							value="0"
+							value="<?php echo esc_attr( $last_limit ); ?>"
 							min="0"
 							step="1"
 							class="small-text"

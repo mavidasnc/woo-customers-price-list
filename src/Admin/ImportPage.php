@@ -71,6 +71,14 @@ class ImportPage {
 	 */
 	private const RESULT_TRANSIENT_TTL = 5 * MINUTE_IN_SECONDS;
 
+	/**
+	 * User meta keys for persisting last import preferences across sessions.
+	 * Stored per-user so multiple admins do not overwrite each other's settings.
+	 */
+	private const META_LAST_SOURCE = '_wdplp_last_import_source';
+	private const META_LAST_URL    = '_wdplp_last_import_url';
+	private const META_LAST_LIMIT  = '_wdplp_last_import_limit';
+
 	// ---------------------------------------------------------------------------
 	// Hooks
 	// ---------------------------------------------------------------------------
@@ -177,6 +185,15 @@ class ImportPage {
 			set_transient( $transient_key, $report->to_array(), self::RESULT_TRANSIENT_TTL );
 		}
 
+		// ── Persist per-user import preferences for pre-filling the form ──────
+		$user_id = get_current_user_id();
+		update_user_meta( $user_id, self::META_LAST_SOURCE, $source );
+		update_user_meta( $user_id, self::META_LAST_LIMIT,  $limit );
+		// $url is defined only in the 'url' branch; save it only when meaningful.
+		if ( 'url' === $source && ! empty( $url ) ) {
+			update_user_meta( $user_id, self::META_LAST_URL, esc_url_raw( $url ) );
+		}
+
 		// ── Redirect back to the import tab ────────────────────────────────────
 		wp_safe_redirect(
 			add_query_arg(
@@ -206,10 +223,15 @@ class ImportPage {
 	 * @return void
 	 */
 	public function render_content( array $import_result = [] ): void {
-		// Make variables available to the template.
+		$user_id    = get_current_user_id();
 		$result     = $import_result;
 		$action_url = esc_url( admin_url( 'admin-post.php' ) );
 		$nonce      = wp_create_nonce( self::NONCE_ACTION );
+
+		// Load per-user last import preferences for pre-filling the form.
+		$last_source = get_user_meta( $user_id, self::META_LAST_SOURCE, true ) ?: 'file';
+		$last_url    = get_user_meta( $user_id, self::META_LAST_URL,    true ) ?: '';
+		$last_limit  = (int) ( get_user_meta( $user_id, self::META_LAST_LIMIT, true ) ?: 0 );
 
 		require WDPLP_PLUGIN_DIR . 'admin/views/import-page.php';
 	}

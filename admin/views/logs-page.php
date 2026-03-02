@@ -10,6 +10,7 @@
  *   $log_files       (array)  — list of bare log filenames, newest first
  *   $selected_file   (string) — currently selected log filename (or empty string)
  *   $log_content     (string) — raw text content of the selected log file
+ *   $download_url    (string) — signed download URL for the selected log file (or '')
  *
  * Security: all dynamic output is escaped with esc_html() / esc_attr() / esc_url().
  *
@@ -27,6 +28,22 @@ $import_history = $import_history ?? [];
 $log_files      = $log_files      ?? [];
 $selected_file  = $selected_file  ?? '';
 $log_content    = $log_content    ?? '';
+
+// Compute a signed download URL for the currently selected log file.
+$download_url = '';
+if ( '' !== $selected_file ) {
+	$download_url = wp_nonce_url(
+		add_query_arg(
+			[
+				'action'   => 'wdplp_download_log',
+				'log_file' => $selected_file,
+			],
+			admin_url( 'admin-post.php' )
+		),
+		'wdplp_download_log',
+		'wdplp_download_nonce'
+	);
+}
 ?>
 
 <?php // ── Import History Table ───────────────────────────────────────────── ?>
@@ -117,6 +134,14 @@ $log_content    = $log_content    ?? '';
 					<span class="wdplp-log-filename">
 						<?php echo esc_html( $selected_file ); ?>
 					</span>
+					<?php if ( '' !== $download_url ) : ?>
+						<a
+							href="<?php echo esc_url( $download_url ); ?>"
+							class="button button-small wdplp-download-log"
+						>
+							<?php esc_html_e( 'Download', WDPLP_TEXT_DOMAIN ); ?>
+						</a>
+					<?php endif; ?>
 					<?php if ( '' !== $log_content ) : ?>
 						<span class="wdplp-log-lines">
 							—

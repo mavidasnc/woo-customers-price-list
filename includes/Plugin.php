@@ -197,6 +197,11 @@ final class Plugin {
 			( new \WDPLP\Admin\ImportPage() )->register_hooks();
 		}
 
+		// Log file download handler (GET action via admin-post.php).
+		if ( class_exists( \WDPLP\Admin\LogsPage::class ) ) {
+			( new \WDPLP\Admin\LogsPage() )->register_hooks();
+		}
+
 		// "Assigned Price List" dropdown on user profile pages.
 		if ( class_exists( \WDPLP\User\UserProfileField::class ) ) {
 			( new \WDPLP\User\UserProfileField() )->register_hooks();

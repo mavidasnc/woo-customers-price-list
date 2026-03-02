@@ -54,7 +54,7 @@ woo-dynamic-pricelist-pro.php
 Plugin::initialize()
   └── checks WooCommerce active + version (>= 7.0)
   └── WP_CLI context   → PriceListCommand registered via WP_CLI::add_command()
-  └── is_admin()       → AdminController + ImportPage + UserProfileField
+  └── is_admin()       → AdminController + ImportPage + LogsPage (hooks) + UserProfileField
   └── else (frontend)  → PriceHooks + CartConsistency
 ```
 
@@ -87,8 +87,8 @@ Results are cached in a private `array $cache` keyed `"{user_id}_{sku}"` (null =
 ### Admin tab routing
 Single slug `wdplp-import` with `?tab=` routing. Valid tabs: `import` (default), `logs`, `data`.
 
-- **import** → `ImportPage::render_content()` — file/URL upload form with optional row-limit field; POST→redirect→GET via transient `wdplp_import_result_{user_id}` (TTL 5 min).
-- **logs** → `LogsPage::render_content()` — import history + log file viewer.
+- **import** → `ImportPage::render_content()` — file/URL upload form with optional row-limit field; POST→redirect→GET via transient `wdplp_import_result_{user_id}` (TTL 5 min). Last-used source, URL, and row-limit saved as user meta (`_wdplp_last_import_source`, `_wdplp_last_import_url`, `_wdplp_last_import_limit`) and pre-filled on next load.
+- **logs** → `LogsPage::render_content()` — import history + log file viewer + "Download" button per file. `LogsPage::handle_download()` hooked to `admin_post_wdplp_download_log`.
 - **data** → `DataPage::render_content()` — paginated read-only table of `custom_price_lists` rows; GET params `filter_sku` (LIKE), `filter_cod` (exact), `paged`; 50 rows/page.
 
 ### Frontend hooks
@@ -113,7 +113,7 @@ Table name: `{$wpdb->prefix}custom_price_lists`
 
 | Constant | Value |
 |---|---|
-| `WDPLP_VERSION` | `'1.1.0'` |
+| `WDPLP_VERSION` | `'1.2.0'` |
 | `WDPLP_PLUGIN_DIR` | `plugin_dir_path(__FILE__)` (trailing slash) |
 | `WDPLP_PLUGIN_URL` | `plugin_dir_url(__FILE__)` (trailing slash) |
 | `WDPLP_PLUGIN_FILE` | `__FILE__` of bootstrap |
@@ -138,6 +138,14 @@ Log file viewer (`LogsPage::read_log_file`) prevents path traversal with:
 ```php
 realpath($path) starts with realpath(WDPLP_LOG_DIR)
 ```
+
+### Log download endpoint
+
+- **Action**: `admin_post_wdplp_download_log`
+- **Handler**: `LogsPage::handle_download()`
+- **Nonce**: action `wdplp_download_log`, field `wdplp_download_nonce`
+- **Link generation**: `wp_nonce_url()` in `admin/views/logs-page.php`
+- **Validation chain**: nonce → `manage_woocommerce` capability → regex (`wc-price-log-YYYY-MM-DD.log`) → `realpath()` containment check → `readfile()` with prior `ob_end_clean()` loop
 
 ---
 

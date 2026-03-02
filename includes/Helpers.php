@@ -37,8 +37,8 @@ final class Helpers {
 	 * Sanitise a product SKU string.
 	 *
 	 * WooCommerce SKUs are free-form strings. We trim whitespace and remove
-	 * any characters that are not alphanumeric, hyphens, underscores, or dots —
-	 * the characters WooCommerce itself accepts for SKUs.
+	 * any characters that are not alphanumeric, hyphens, underscores, dots,
+	 * forward slashes, or plus signs — all characters WooCommerce accepts for SKUs.
 	 *
 	 * @param string $sku Raw SKU value.
 	 * @return string Sanitised SKU, safe for database insertion.
@@ -48,8 +48,9 @@ final class Helpers {
 		$sku = sanitize_text_field( $sku );
 
 		// Allow only alphanumeric characters plus the symbols WooCommerce accepts.
+		// Note: '+' inside a character class [...] is a literal, not a quantifier.
 		// This prevents injection in contexts where $wpdb->prepare is not used.
-		$sku = preg_replace( '/[^a-zA-Z0-9\-_.\/]/', '', $sku );
+		$sku = preg_replace( '/[^a-zA-Z0-9\-_.\/+]/', '', $sku );
 
 		return trim( $sku );
 	}

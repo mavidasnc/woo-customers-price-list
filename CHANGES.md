@@ -7,6 +7,34 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.2.0] — 2026-03-02
+
+### Fixed
+
+- **SKU sanitisation with `+` character** (`includes/Helpers.php`): `Helpers::sanitize_sku()`
+  now preserves the `+` character. SKUs such as `895.2002240406+6` were previously stripped
+  to `895.20022404006` by the character-class regex, causing "SKU not found" errors on import
+  even when the product existed in WooCommerce. The fix adds `+` to the allowed-characters
+  whitelist (inside `[...]` it is a literal, not a quantifier — no escaping required).
+
+### Added
+
+- **Import preferences memory** (`src/Admin/ImportPage.php`, `admin/views/import-page.php`):
+  the import form now restores the last used source type (file / remote URL), the remote URL,
+  and the row-limit value on page load. Preferences are saved as WordPress user meta
+  (`_wdplp_last_import_source`, `_wdplp_last_import_url`, `_wdplp_last_import_limit`) and
+  are scoped per admin user — multiple administrators do not overwrite each other's settings.
+
+- **Log file download** (`src/Admin/LogsPage.php`, `admin/views/logs-page.php`):
+  each log file in the Logs & History tab now shows a "Download" button that serves the raw
+  `.log` file as a `text/plain` attachment. The endpoint (`admin_post_wdplp_download_log`,
+  handled by `LogsPage::handle_download()`) enforces nonce validation, `manage_woocommerce`
+  capability, regex filename validation, and `realpath()` path-traversal prevention — the
+  same security chain as the log viewer. `LogsPage` is now also instantiated in
+  `Plugin::register_admin_hooks()` to register the download hook on every admin request.
+
+---
+
 ## [1.1.0] — 2026-02-26
 
 ### Added
@@ -68,5 +96,6 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - PSR-4-style autoloader (no Composer dependency).
 - `uninstall.php`: drops table, deletes options, removes all `_assigned_price_list` user meta on full delete.
 
+[1.2.0]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/your-username/woo-dynamic-pricelist-pro/releases/tag/v1.0.0
