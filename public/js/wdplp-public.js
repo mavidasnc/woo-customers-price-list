@@ -23,6 +23,7 @@
 	 * minimumResultsForSearch: 0 — search box always visible.
 	 */
 	function initSidebarSelects() {
+		/*
 		$( '#sidebar select' )
 			.not( '.select2-hidden-accessible' )
 			.select2( {
@@ -30,6 +31,7 @@
 				width:                     '100%',
 				minimumResultsForSearch:   0,
 			} );
+			 */
 	}
 
 	$( document ).ready( function () {
