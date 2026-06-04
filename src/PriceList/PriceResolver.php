@@ -140,6 +140,14 @@ class PriceResolver {
 		// Normalise: accept float or null from filter; discard other types.
 		$resolved = is_numeric( $filtered_price ) ? (float) $filtered_price : null;
 
+		// Treat zero or negative prices as "no custom price" and fall back to
+		// WooCommerce default. A zero entry in the custom table is either a data
+		// import error or a WooCommerce _sale_price = 0 artefact leaking through
+		// an external filter — never a valid B2B list price.
+		if ( null !== $resolved && $resolved <= 0 ) {
+			$resolved = null;
+		}
+
 		// Cache and return.
 		$this->cache[ $cache_key ] = $resolved;
 		return $resolved;

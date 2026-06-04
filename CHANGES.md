@@ -7,6 +7,22 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.3.5] — 2026-06-04
+
+### Fixed
+
+- **Prezzo €0 da listino con valore zero** (`src/PriceList/PriceResolver.php`):
+  se la tabella `custom_price_lists` conteneva `price = 0.0000` per uno SKU (errore
+  di import o artefatto), il resolver restituiva `0.0` (float) anziché `null`, e i
+  consumer (PriceHooks, CartConsistency) lo usavano come prezzo valido mostrando
+  `€0,00`. Aggiunto guard `<= 0` dopo la normalizzazione del filtro `wdplp_final_price`:
+  qualsiasi valore riconducibile a zero viene ora trattato come assenza di prezzo
+  personalizzato e innesca il fallback al prezzo WooCommerce di default.
+  Copre tutti i casi: `0` (int), `0.0` (float), `'0'` (stringa), `'0.0000'` (DECIMAL
+  da DB), valori negativi.
+
+---
+
 ## [1.3.4] — 2026-06-04
 
 ### Fixed
@@ -185,6 +201,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - PSR-4-style autoloader (no Composer dependency).
 - `uninstall.php`: drops table, deletes options, removes all `_assigned_price_list` user meta on full delete.
 
+[1.3.5]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.4...v1.3.5
 [1.3.4]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.1...v1.3.2
