@@ -135,7 +135,7 @@ Table name: `{$wpdb->prefix}custom_price_lists`
 
 | Constant | Value |
 |---|---|
-| `WDPLP_VERSION` | `'1.3.3'` |
+| `WDPLP_VERSION` | `'1.3.4'` |
 | `WDPLP_PLUGIN_DIR` | `plugin_dir_path(__FILE__)` (trailing slash) |
 | `WDPLP_PLUGIN_URL` | `plugin_dir_url(__FILE__)` (trailing slash) |
 | `WDPLP_PLUGIN_FILE` | `__FILE__` of bootstrap |

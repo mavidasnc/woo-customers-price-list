@@ -7,6 +7,24 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.3.4] — 2026-06-04
+
+### Fixed
+
+- **Prezzo €0 su prodotti variabili con `_sale_price = 0`** (`src/Frontend/PriceHooks.php`):
+  `WC_Product_Variable::get_price_html()` applica il filtro `woocommerce_variable_price_html`
+  (non `woocommerce_get_price_html`), che il plugin non intercettava. Di conseguenza, il prezzo
+  iniziale del prodotto padre (mostrato prima che l'utente selezioni una variante) ignorava
+  completamente il listino e mostrava il prezzo WooCommerce grezzo. Quando una variante aveva
+  `_sale_price = 0` (anche per errore), il padre visualizzava `€0,00`.
+  Aggiunto hook su `woocommerce_variable_price_html` (priorità 20) con il callback
+  `filter_variable_price_html()`: itera sulle varianti visibili, raccoglie i prezzi dal listino
+  dell'utente tramite `PriceResolver`, e restituisce un singolo prezzo o un range `min–max`.
+  Se nessuna variante ha un prezzo nel listino, cade in fallback al comportamento WooCommerce
+  di default. Il listino dell'utente vince sempre sul `_sale_price` impostato sul prodotto.
+
+---
+
 ## [1.3.3] — 2026-03-02
 
 ### Added
@@ -167,6 +185,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - PSR-4-style autoloader (no Composer dependency).
 - `uninstall.php`: drops table, deletes options, removes all `_assigned_price_list` user meta on full delete.
 
+[1.3.4]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/your-username/woo-dynamic-pricelist-pro/compare/v1.3.0...v1.3.1

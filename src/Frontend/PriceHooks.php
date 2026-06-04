@@ -17,7 +17,12 @@
  *
  * Hooks used:
  *   woocommerce_get_price_html      — filter: replaces the rendered price HTML
- *                                     for both guests and users with a list price.
+ *                                     for simple products and individual variations.
+ *   woocommerce_variable_price_html — filter: replaces the rendered price range HTML
+ *                                     for variable products (parent object, no SKU).
+ *                                     Without this hook, any variation with _sale_price = 0
+ *                                     causes the parent to display €0,00 regardless of
+ *                                     the user's assigned price list.
  *   woocommerce_is_purchasable      — filter: disables "Add to Cart" for guests.
  *
  * Design notes:
@@ -70,9 +75,14 @@ class PriceHooks {
 	public function register_hooks(): void {
 		$this->resolver = new PriceResolver();
 
-		// Filter the rendered price HTML block.
+		// Filter the rendered price HTML block for simple products and variations.
 		// Priority 20 to run after WooCommerce's own price rendering (priority 10).
 		add_filter( 'woocommerce_get_price_html', [ $this, 'filter_price_html' ], 20, 2 );
+
+		// Filter the rendered price range HTML for variable products (parent object).
+		// WC_Product_Variable::get_price_html() uses a dedicated filter rather than
+		// woocommerce_get_price_html, so we must hook it separately.
+		add_filter( 'woocommerce_variable_price_html', [ $this, 'filter_variable_price_html' ], 20, 2 );
 
 		// Prevent guests from adding items to cart.
 		add_filter( 'woocommerce_is_purchasable', [ $this, 'restrict_purchase_for_guests' ], 20, 2 );
@@ -148,6 +158,76 @@ class PriceHooks {
 		}
 
 		return $purchasable;
+	}
+
+	/**
+	 * Replace or hide the variable product price range HTML.
+	 *
+	 * WooCommerce calls woocommerce_variable_price_html (not woocommerce_get_price_html)
+	 * for WC_Product_Variable objects. The parent variable product typically has no SKU,
+	 * so filter_price_html cannot resolve a listino price for it. This method iterates
+	 * all visible child variations, collects their listino prices, and rebuilds the
+	 * displayed range from the listino data.
+	 *
+	 * Without this hook, any variation with _sale_price = 0 (even an erroneous one)
+	 * causes the parent to display €0,00 as part of the price range, overriding the
+	 * correct listino prices entirely.
+	 *
+	 * Guest behaviour: returns the login prompt (same as filter_price_html).
+	 * Logged-in, no listino prices found: returns $price_html unchanged (WC default).
+	 * Logged-in, prices found: returns wc_price( single ) or "min – max" range.
+	 *
+	 * @param string               $price_html The original WooCommerce price range HTML.
+	 * @param \WC_Product_Variable $product    The variable product object.
+	 * @return string                          The modified price HTML to display.
+	 */
+	public function filter_variable_price_html( string $price_html, \WC_Product_Variable $product ): string {
+		// ── A. Guest: hide prices ──────────────────────────────────────────────
+		if ( ! is_user_logged_in() ) {
+			return $this->get_login_prompt();
+		}
+
+		// ── B. Logged-in: collect listino prices from all visible variations ───
+		$user_id = get_current_user_id();
+		$prices  = [];
+
+		foreach ( $product->get_children() as $variation_id ) {
+			$variation = wc_get_product( $variation_id );
+
+			if ( ! ( $variation instanceof \WC_Product_Variation ) ) {
+				continue;
+			}
+
+			if ( ! $variation->variation_is_visible() ) {
+				continue;
+			}
+
+			$sku = $variation->get_sku();
+
+			if ( '' === $sku ) {
+				continue;
+			}
+
+			$price = $this->resolver->get_price_for_user( $user_id, $sku );
+
+			if ( null !== $price ) {
+				$prices[] = $price;
+			}
+		}
+
+		if ( empty( $prices ) ) {
+			// No variation has a listino price — fall back to WooCommerce default range.
+			return $price_html;
+		}
+
+		$min = min( $prices );
+		$max = max( $prices );
+
+		if ( $min === $max ) {
+			return wc_price( $min );
+		}
+
+		return sprintf( '%s&ndash;%s', wc_price( $min ), wc_price( $max ) );
 	}
 
 	// ---------------------------------------------------------------------------
