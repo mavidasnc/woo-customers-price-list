@@ -11,6 +11,14 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.4.2] — 2026-06-16
+
+### Fixed
+
+- Tab Aggiornamenti: il link "Repository" mostra ora solo `autore/repo` (`mavidasnc/woo-dynamic-pricelist-pro`) invece dell'URL completo, coerentemente con il plugin woo-multi-stock.
+
+---
+
 ## [1.4.1] — 2026-06-16
 
 ### Fixed

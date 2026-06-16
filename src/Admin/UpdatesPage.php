@@ -52,7 +52,7 @@ class UpdatesPage {
 						<th scope="row"><?php esc_html_e( 'Repository', WDPLP_TEXT_DOMAIN ); ?></th>
 						<td>
 							<a href="https://github.com/mavidasnc/woo-dynamic-pricelist-pro" target="_blank" rel="noopener noreferrer">
-								github.com/mavidasnc/woo-dynamic-pricelist-pro
+								mavidasnc/woo-dynamic-pricelist-pro
 							</a>
 						</td>
 					</tr>
