@@ -9,10 +9,17 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+---
+
+## [1.4.0] — 2026-06-16
+
 ### Added
 
 - Sistema di aggiornamento automatico via GitHub Releases (`includes/Updater.php`): iniezione nel transient `update_plugins`, popup "Visualizza dettagli" via `plugins_api`, rinomina cartella estratta (`upgrader_source_selection`), invalidazione cache dopo update.
 - Tab **Updates** nella pagina admin (`src/Admin/UpdatesPage.php`): versione installata, versione remota, pulsante "Check for updates" con risposta AJAX (changelog + pulsante "Update now").
+
+### Fixed
+
 - Corretta `Plugin URI` nell'header del plugin (rimosso placeholder `your-username`).
 
 ---
