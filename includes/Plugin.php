@@ -112,6 +112,11 @@ final class Plugin {
 		// Load translations.
 		add_action( 'init', [ $this, 'load_textdomain' ] );
 
+		// Updater: registrato fuori da is_admin() — il cron WP non è in contesto admin.
+		if ( class_exists( \WDPLP\Updater::class ) ) {
+			( new \WDPLP\Updater() )->register_hooks();
+		}
+
 		// Context-based subsystem initialisation.
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			// WP-CLI context: register the price-list command only.

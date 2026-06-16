@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       WooCommerce Dynamic Price List Pro
- * Plugin URI:        https://github.com/your-username/woo-dynamic-pricelist-pro
+ * Plugin URI:        https://github.com/mavidasnc/woo-dynamic-pricelist-pro
  * Description:       Professional WooCommerce plugin for dynamic, per-user price lists imported from CSV. Supports multi-tier pricing (L40, L45, L50N1, etc.) with per-user assignment and full WP-CLI support.
  * Version:           1.3.5
  * Author:            Mavida s.n.c

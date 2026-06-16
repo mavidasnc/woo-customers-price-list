@@ -8,6 +8,7 @@
  *      the import is running to prevent double submissions.
  *   3. File validation: basic client-side check that the selected file has an
  *      accepted extension (.csv or .txt) before submitting.
+ *   4. Updates tab: force a GitHub-release check via wdplp_check_update AJAX.
  *
  * Depends on: jQuery (loaded by WordPress admin).
  * Data: `wdplpAdmin` object localised by AdminController::enqueue_assets().
@@ -30,6 +31,7 @@
 	$( function () {
 		initSourceToggle();
 		initFormSubmit();
+		initUpdates();
 	} );
 
 	// ─────────────────────────────────────────────────────────────────────────
@@ -200,6 +202,129 @@
 	 */
 	function clearInlineError() {
 		$( '#wdplp-inline-error' ).hide();
+	}
+
+	// ─────────────────────────────────────────────────────────────────────────
+	// 4. Updates tab
+	// ─────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * Wire up the "Check for updates" button: calls wdplp_check_update AJAX,
+	 * fills the latest-version cell and renders an availability notice.
+	 */
+	function initUpdates() {
+		var $btn = $( '#wdplp-check-update' );
+
+		if ( ! $btn.length ) { return; }
+
+		var i18n    = ( wdplpAdmin && wdplpAdmin.i18n ) ? wdplpAdmin.i18n : {};
+		var $status = $( '#wdplp-update-status' );
+		var $latest = $( '#wdplp-latest-version' );
+		var $result = $( '#wdplp-update-result' );
+
+		$btn.on( 'click', function () {
+			$btn.prop( 'disabled', true );
+			$status.text( i18n.checkingUpdate || '' );
+			$result.empty();
+
+			$.post( wdplpAdmin.ajaxUrl, {
+				action: 'wdplp_check_update',
+				nonce:  wdplpAdmin.nonce
+			} )
+				.done( function ( response ) {
+					if ( ! response || ! response.success || ! response.data ) {
+						$status.text( extractMessage( response ) || i18n.errorCheck || '' );
+						return;
+					}
+
+					var d = response.data;
+					$status.text( '' );
+					$latest.text( d.latest );
+
+					if ( d.update_available ) {
+						$result.html( buildUpdateNotice( d ) );
+					} else {
+						$result.html(
+							'<div class="notice notice-success inline"><p>' +
+							escHtml( i18n.upToDate || '' ) +
+							'</p></div>'
+						);
+					}
+				} )
+				.fail( function () {
+					$status.text( i18n.errorCheck || '' );
+				} )
+				.always( function () {
+					$btn.prop( 'disabled', false );
+				} );
+		} );
+	}
+
+	/**
+	 * Costruisce il notice "nuova versione disponibile" con changelog e pulsante update.
+	 *
+	 * @param {Object} d  Dati della risposta wdplp_check_update.
+	 * @return {string}   Markup HTML.
+	 */
+	function buildUpdateNotice( d ) {
+		var i18n    = ( wdplpAdmin && wdplpAdmin.i18n ) ? wdplpAdmin.i18n : {};
+		var heading = ( i18n.updateAvailable || '%s' ).replace( '%s', escHtml( d.latest ) );
+
+		var html = '<div class="notice notice-warning inline"><p><strong>' + heading + '</strong></p>';
+
+		// Il changelog è HTML già sanitizzato lato server (wp_kses_post) → inserito as-is.
+		if ( d.changelog ) {
+			html += '<details style="margin:6px 0;"><summary>' + escHtml( i18n.changelog || 'Changelog' ) +
+				'</summary><div class="wdplp-changelog">' + d.changelog + '</div></details>';
+		}
+
+		if ( d.upgrade_url ) {
+			html += '<p><a href="' + escAttr( d.upgrade_url ) +
+				'" class="button button-primary">' + escHtml( i18n.updateNow || 'Update now' ) + '</a></p>';
+		}
+
+		html += '</div>';
+
+		return html;
+	}
+
+	// ─────────────────────────────────────────────────────────────────────────
+	// Utilities
+	// ─────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * HTML-escape a string usando il DOM.
+	 *
+	 * @param {string} str
+	 * @return {string}
+	 */
+	function escHtml( str ) {
+		return $( '<div>' ).text( String( str ) ).html();
+	}
+
+	/**
+	 * Attribute-escape a string.
+	 *
+	 * @param {string} str
+	 * @return {string}
+	 */
+	function escAttr( str ) {
+		return escHtml( str )
+			.replace( /"/g, '&quot;' )
+			.replace( /'/g, '&#039;' );
+	}
+
+	/**
+	 * Estrae il messaggio da una risposta wp_send_json_error().
+	 *
+	 * @param {Object} response
+	 * @return {string}
+	 */
+	function extractMessage( response ) {
+		if ( ! response || ! response.data ) { return ''; }
+		if ( typeof response.data === 'string' ) { return response.data; }
+		if ( typeof response.data.message === 'string' ) { return response.data.message; }
+		return '';
 	}
 
 }( jQuery ) );
