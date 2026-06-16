@@ -385,3 +385,81 @@ msgstr ""
 #: admin/views/data-page.php:211
 msgid "Imported At"
 msgstr ""
+
+#: admin/views/logs-page.php:142
+msgid "Download"
+msgstr ""
+
+#: src/Admin/LogsPage.php:100
+msgid "Invalid log file name."
+msgstr ""
+
+#: src/Admin/LogsPage.php:101
+#: src/Admin/LogsPage.php:119
+msgid "Error"
+msgstr ""
+
+#: src/Admin/LogsPage.php:118
+msgid "Log file not found or not readable."
+msgstr ""
+
+#: src/Admin/AdminController.php:232
+msgid "Updates"
+msgstr ""
+
+#: src/Admin/AdminController.php:158
+msgid "Checking for updates…"
+msgstr ""
+
+#: src/Admin/AdminController.php:159
+msgid "The plugin is up to date."
+msgstr ""
+
+#. translators: %s: numero versione più recente disponibile su GitHub
+#: src/Admin/AdminController.php:161
+msgid "A new version is available: %s"
+msgstr ""
+
+#: src/Admin/AdminController.php:162
+msgid "Changelog"
+msgstr ""
+
+#: src/Admin/AdminController.php:163
+msgid "Update now"
+msgstr ""
+
+#: src/Admin/AdminController.php:164
+msgid "Unable to check for updates. Please try again."
+msgstr ""
+
+#: src/Admin/UpdatesPage.php:36
+msgid "This plugin updates itself directly from its GitHub releases. Use the button below to check for a new version on demand; WordPress also checks automatically in the background."
+msgstr ""
+
+#: src/Admin/UpdatesPage.php:44
+msgid "Installed version"
+msgstr ""
+
+#: src/Admin/UpdatesPage.php:48
+msgid "Latest version"
+msgstr ""
+
+#: src/Admin/UpdatesPage.php:52
+msgid "Repository"
+msgstr ""
+
+#: src/Admin/UpdatesPage.php:64
+msgid "Check for updates"
+msgstr ""
+
+#: includes/Updater.php:269
+msgid "Unable to rename the update package folder."
+msgstr ""
+
+#: includes/Updater.php:297
+msgid "Insufficient permissions."
+msgstr ""
+
+#: includes/Updater.php:305
+msgid "Unable to contact GitHub. Please retry later."
+msgstr ""

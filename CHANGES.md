@@ -11,6 +11,15 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.4.1] — 2026-06-16
+
+### Fixed
+
+- Tab "Aggiornamenti" visualizzata in inglese: aggiunte tutte le traduzioni italiane mancanti per le stringhe introdotte in 1.4.0 (`includes/Updater.php`, `src/Admin/UpdatesPage.php`, `src/Admin/AdminController.php`).
+- Completate le traduzioni mancanti per il visualizzatore log (`Download`, `Errore`, `Nome del file di log non valido`, `File di log non trovato o non leggibile`).
+
+---
+
 ## [1.4.0] — 2026-06-16
 
 ### Added
