@@ -18,8 +18,8 @@ npm run build:prod   # compila compresso per produzione
 
 | Sorgente SCSS | Output CSS compilato |
 |---|---|
-| `admin/scss/wdplp-admin.scss` | `admin/css/wdplp-admin.css` |
-| `public/scss/wdplp-public.scss` | `public/css/wdplp-public.css` |
+| `admin/scss/wcpl-admin.scss` | `admin/css/wcpl-admin.css` |
+| `public/scss/wcpl-public.scss` | `public/css/wcpl-public.css` |
 
 I file CSS compilati **vanno committati** nel repo (produzione non ha npm).
 `node_modules/` è già in `.gitignore`.
@@ -54,20 +54,20 @@ The custom autoloader (`includes/Autoloader.php`) is **not Composer** — it use
 
 | FQCN pattern | Resolves to |
 |---|---|
-| `WDPLP\SomeClass` (no sub-namespace) | `includes/SomeClass.php` |
-| `WDPLP\SubNs\SomeClass` (has sub-namespace) | `src/SubNs/SomeClass.php` |
+| `WCPL\SomeClass` (no sub-namespace) | `includes/SomeClass.php` |
+| `WCPL\SubNs\SomeClass` (has sub-namespace) | `src/SubNs/SomeClass.php` |
 
-Practical consequence: all classes in `includes/` are in the **root namespace** `WDPLP\`; all classes in `src/` carry a **sub-namespace** (e.g. `WDPLP\Import\CsvImporter`).
+Practical consequence: all classes in `includes/` are in the **root namespace** `WCPL\`; all classes in `src/` carry a **sub-namespace** (e.g. `WCPL\Import\CsvImporter`).
 
 ---
 
 ## Plugin Lifecycle
 
 ```
-woo-dynamic-pricelist-pro.php
+woo-customers-price-list.php
   └── PHP 8.0 check (deactivates + notice if fails)
-  └── defines 8 WDPLP_* constants
-  └── require_once includes/Autoloader.php → WDPLP\Autoloader::register()
+  └── defines 8 WCPL_* constants
+  └── require_once includes/Autoloader.php → WCPL\Autoloader::register()
   └── register_activation_hook → Activator::activate()
         └── Database::create_table() (dbDelta — idempotent)
         └── Helpers::ensure_log_dir()
@@ -101,16 +101,16 @@ Wide CSV → transform to "long" → SKU validation → WC price updates → DB 
 ### Price resolution (`PriceResolver::get_price_for_user`)
 1. Read `_assigned_price_list` user meta (the `cod` string)
 2. `Repository::get_price_for_sku_and_cod()` — `ORDER BY date_from DESC LIMIT 1` (most recent wins)
-3. `apply_filters('wdplp_final_price', $price, $sku, $user_id, $cod)` — developer override point
+3. `apply_filters('wcpl_final_price', $price, $sku, $user_id, $cod)` — developer override point
 4. Returns `null` to signal "use WooCommerce default"
 
 Results are cached in a private `array $cache` keyed `"{user_id}_{sku}"` (null = confirmed miss, to avoid re-querying).
 
 ### Admin tab routing
-Single slug `wdplp-import` with `?tab=` routing. Valid tabs: `import` (default), `logs`, `data`.
+Single slug `wcpl-import` with `?tab=` routing. Valid tabs: `import` (default), `logs`, `data`.
 
-- **import** → `ImportPage::render_content()` — file/URL upload form with optional row-limit field; POST→redirect→GET via transient `wdplp_import_result_{user_id}` (TTL 5 min). Last-used source, URL, and row-limit saved as user meta (`_wdplp_last_import_source`, `_wdplp_last_import_url`, `_wdplp_last_import_limit`) and pre-filled on next load.
-- **logs** → `LogsPage::render_content()` — import history + log file viewer + "Download" button per file. `LogsPage::handle_download()` hooked to `admin_post_wdplp_download_log`.
+- **import** → `ImportPage::render_content()` — file/URL upload form with optional row-limit field; POST→redirect→GET via transient `wcpl_import_result_{user_id}` (TTL 5 min). Last-used source, URL, and row-limit saved as user meta (`_wcpl_last_import_source`, `_wcpl_last_import_url`, `_wcpl_last_import_limit`) and pre-filled on next load.
+- **logs** → `LogsPage::render_content()` — import history + log file viewer + "Download" button per file. `LogsPage::handle_download()` hooked to `admin_post_wcpl_download_log`.
 - **data** → `DataPage::render_content()` — paginated read-only table of `custom_price_lists` rows; GET params `filter_sku` (LIKE), `filter_cod` (exact), `paged`; 50 rows/page.
 
 ### Frontend hooks
@@ -135,14 +135,14 @@ Table name: `{$wpdb->prefix}custom_price_lists`
 
 | Constant | Value |
 |---|---|
-| `WDPLP_VERSION` | `'1.3.5'` |
-| `WDPLP_PLUGIN_DIR` | `plugin_dir_path(__FILE__)` (trailing slash) |
-| `WDPLP_PLUGIN_URL` | `plugin_dir_url(__FILE__)` (trailing slash) |
-| `WDPLP_PLUGIN_FILE` | `__FILE__` of bootstrap |
-| `WDPLP_TEXT_DOMAIN` | `'woo-dynamic-pricelist-pro'` |
-| `WDPLP_MIN_WC` | `'7.0'` |
-| `WDPLP_MIN_PHP` | `'8.0'` |
-| `WDPLP_LOG_DIR` | `WP_CONTENT_DIR . '/uploads/wc-price-logs/'` |
+| `WCPL_VERSION` | `'1.3.5'` |
+| `WCPL_PLUGIN_DIR` | `plugin_dir_path(__FILE__)` (trailing slash) |
+| `WCPL_PLUGIN_URL` | `plugin_dir_url(__FILE__)` (trailing slash) |
+| `WCPL_PLUGIN_FILE` | `__FILE__` of bootstrap |
+| `WCPL_TEXT_DOMAIN` | `'woo-customers-price-list'` |
+| `WCPL_MIN_WC` | `'7.0'` |
+| `WCPL_MIN_PHP` | `'8.0'` |
+| `WCPL_LOG_DIR` | `WP_CONTENT_DIR . '/uploads/wc-price-logs/'` |
 
 ---
 
@@ -151,21 +151,21 @@ Table name: `{$wpdb->prefix}custom_price_lists`
 Every admin action uses the **WordPress Security Trinity**:
 
 ```php
-check_admin_referer( 'wdplp_import', 'wdplp_import_nonce' );   // nonce
+check_admin_referer( 'wcpl_import', 'wcpl_import_nonce' );   // nonce
 current_user_can( 'manage_woocommerce' );                        // capability
 sanitize_text_field( $raw );  /  Helpers::sanitize_sku( $raw ); // sanitise
 ```
 
 Log file viewer (`LogsPage::read_log_file`) prevents path traversal with:
 ```php
-realpath($path) starts with realpath(WDPLP_LOG_DIR)
+realpath($path) starts with realpath(WCPL_LOG_DIR)
 ```
 
 ### Log download endpoint
 
-- **Action**: `admin_post_wdplp_download_log`
+- **Action**: `admin_post_wcpl_download_log`
 - **Handler**: `LogsPage::handle_download()`
-- **Nonce**: action `wdplp_download_log`, field `wdplp_download_nonce`
+- **Nonce**: action `wcpl_download_log`, field `wcpl_download_nonce`
 - **Link generation**: `wp_nonce_url()` in `admin/views/logs-page.php`
 - **Validation chain**: nonce → `manage_woocommerce` capability → regex (`wc-price-log-YYYY-MM-DD.log`) → `realpath()` containment check → `readfile()` with prior `ob_end_clean()` loop
 
@@ -175,17 +175,17 @@ realpath($path) starts with realpath(WDPLP_LOG_DIR)
 
 | Hook | Type | Signature |
 |---|---|---|
-| `wdplp_before_import` | action | `( array $source_info )` |
-| `wdplp_after_import` | action | `( ImportReport $report )` |
-| `wdplp_final_price` | filter | `( float $price, string $sku, int $user_id, string $cod )` — return `null` to fall back to WC default |
-| `wdplp_login_prompt_html` | filter | `( string $message, string $login_url )` |
-| `wdplp_remote_download_timeout` | filter | `( int $seconds, string $url )` |
+| `wcpl_before_import` | action | `( array $source_info )` |
+| `wcpl_after_import` | action | `( ImportReport $report )` |
+| `wcpl_final_price` | filter | `( float $price, string $sku, int $user_id, string $cod )` — return `null` to fall back to WC default |
+| `wcpl_login_prompt_html` | filter | `( string $message, string $login_url )` |
+| `wcpl_remote_download_timeout` | filter | `( int $seconds, string $url )` |
 
 ---
 
 ## Adding a New Class
 
-1. Decide namespace: root-level utility → `includes/` + namespace `WDPLP`; domain class → `src/SubNs/` + namespace `WDPLP\SubNs`
+1. Decide namespace: root-level utility → `includes/` + namespace `WCPL`; domain class → `src/SubNs/` + namespace `WCPL\SubNs`
 2. Create the file — autoloader resolves it automatically
 3. Register hooks in `Plugin::register_admin_hooks()` or `register_frontend_hooks()`, wrapped in `class_exists()`
 
@@ -193,30 +193,30 @@ realpath($path) starts with realpath(WDPLP_LOG_DIR)
 
 ## Internazionalizzazione (i18n)
 
-Text domain: `woo-dynamic-pricelist-pro` (constant `WDPLP_TEXT_DOMAIN`).
+Text domain: `woo-customers-price-list` (constant `WCPL_TEXT_DOMAIN`).
 Translation files live in `languages/`. Loaded via `load_plugin_textdomain()` on `init`.
 
 | File | Purpose |
 |---|---|
-| `languages/woo-dynamic-pricelist-pro.pot` | Template — source of truth for all msgid strings (~75 entries) |
-| `languages/woo-dynamic-pricelist-pro-it_IT.po` | Italian translation (human-readable) |
-| `languages/woo-dynamic-pricelist-pro-it_IT.mo` | Italian translation (binary, loaded by WordPress) |
+| `languages/woo-customers-price-list.pot` | Template — source of truth for all msgid strings (~75 entries) |
+| `languages/woo-customers-price-list-it_IT.po` | Italian translation (human-readable) |
+| `languages/woo-customers-price-list-it_IT.mo` | Italian translation (binary, loaded by WordPress) |
 | `tools/compile-mo.php` | Standalone `.po` → `.mo` compiler (no external tools needed) |
 
 ### Adding a new translatable string
-Use `__( 'String', WDPLP_TEXT_DOMAIN )` (or `esc_html__`, `esc_html_e` etc.). Add a `/* translators: */` comment when the string contains `%s`/`%d` placeholders.
+Use `__( 'String', WCPL_TEXT_DOMAIN )` (or `esc_html__`, `esc_html_e` etc.). Add a `/* translators: */` comment when the string contains `%s`/`%d` placeholders.
 
 **Exception — `CsvTransformer.php`**: this class is pure PHP with no WP dependency by design. Its internal warning strings are intentionally left in English.
 
 ### Updating translations after code changes
 ```bash
 # Regenerate .pot (requires WP-CLI in a WP environment)
-wp i18n make-pot . languages/woo-dynamic-pricelist-pro.pot
+wp i18n make-pot . languages/woo-customers-price-list.pot
 
 # Merge new strings into existing .po without losing translations
-msgmerge --update languages/woo-dynamic-pricelist-pro-it_IT.po \
-         languages/woo-dynamic-pricelist-pro.pot
+msgmerge --update languages/woo-customers-price-list-it_IT.po \
+         languages/woo-customers-price-list.pot
 
 # Recompile .mo (no external tools needed)
-php tools/compile-mo.php languages/woo-dynamic-pricelist-pro-it_IT.po
+php tools/compile-mo.php languages/woo-customers-price-list-it_IT.po
 ```

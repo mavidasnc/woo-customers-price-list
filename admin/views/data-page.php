@@ -18,7 +18,7 @@
  *
  * Security: all dynamic output is escaped.
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.0.0
  */
 
@@ -63,20 +63,20 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 ?>
 
 <?php // ── Filter form ──────────────────────────────────────────────────────── ?>
-<div class="wdplp-card postbox">
+<div class="wcpl-card postbox">
 	<div class="postbox-header">
-		<h2 class="hndle"><?php esc_html_e( 'Filter Price List Data', WDPLP_TEXT_DOMAIN ); ?></h2>
+		<h2 class="hndle"><?php esc_html_e( 'Filter Price List Data', WCPL_TEXT_DOMAIN ); ?></h2>
 	</div>
 	<div class="inside">
-		<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>" id="wdplp-data-filter-form">
+		<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>" id="wcpl-data-filter-form">
 			<?php // Preserve the page and tab parameters. ?>
-			<input type="hidden" name="page" value="<?php echo esc_attr( \WDPLP\Admin\AdminController::PAGE_SLUG ); ?>">
+			<input type="hidden" name="page" value="<?php echo esc_attr( \WCPL\Admin\AdminController::PAGE_SLUG ); ?>">
 			<input type="hidden" name="tab"  value="data">
 
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row">
-						<label for="filter_sku"><?php esc_html_e( 'SKU', WDPLP_TEXT_DOMAIN ); ?></label>
+						<label for="filter_sku"><?php esc_html_e( 'SKU', WCPL_TEXT_DOMAIN ); ?></label>
 					</th>
 					<td>
 						<input
@@ -85,17 +85,17 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 							id="filter_sku"
 							value="<?php echo esc_attr( $filter_sku ); ?>"
 							class="regular-text"
-							placeholder="<?php esc_attr_e( 'Partial SKU (e.g. PROD-0)', WDPLP_TEXT_DOMAIN ); ?>"
+							placeholder="<?php esc_attr_e( 'Partial SKU (e.g. PROD-0)', WCPL_TEXT_DOMAIN ); ?>"
 						>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">
-						<label for="filter_cod"><?php esc_html_e( 'Price List Code', WDPLP_TEXT_DOMAIN ); ?></label>
+						<label for="filter_cod"><?php esc_html_e( 'Price List Code', WCPL_TEXT_DOMAIN ); ?></label>
 					</th>
 					<td>
 						<select name="filter_cod" id="filter_cod">
-							<option value=""><?php esc_html_e( '— All codes —', WDPLP_TEXT_DOMAIN ); ?></option>
+							<option value=""><?php esc_html_e( '— All codes —', WCPL_TEXT_DOMAIN ); ?></option>
 							<?php foreach ( $all_cods as $cod ) : ?>
 								<option
 									value="<?php echo esc_attr( $cod ); ?>"
@@ -111,11 +111,11 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 
 			<p class="submit">
 				<button type="submit" class="button button-primary">
-					<?php esc_html_e( 'Apply Filters', WDPLP_TEXT_DOMAIN ); ?>
+					<?php esc_html_e( 'Apply Filters', WCPL_TEXT_DOMAIN ); ?>
 				</button>
 				<?php if ( '' !== $filter_sku || '' !== $filter_cod ) : ?>
 					<a href="<?php echo esc_url( $base_url ); ?>" class="button button-secondary">
-						<?php esc_html_e( 'Reset', WDPLP_TEXT_DOMAIN ); ?>
+						<?php esc_html_e( 'Reset', WCPL_TEXT_DOMAIN ); ?>
 					</a>
 				<?php endif; ?>
 			</p>
@@ -124,13 +124,13 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 </div>
 
 <?php // ── Data table ───────────────────────────────────────────────────────── ?>
-<div class="wdplp-card postbox">
+<div class="wcpl-card postbox">
 	<div class="postbox-header">
 		<h2 class="hndle">
 			<?php
 			printf(
 				/* translators: %d: total number of matching rows */
-				esc_html__( 'Price List Rows (%d total)', WDPLP_TEXT_DOMAIN ),
+				esc_html__( 'Price List Rows (%d total)', WCPL_TEXT_DOMAIN ),
 				(int) $total_rows
 			);
 			?>
@@ -139,25 +139,25 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 	<div class="inside">
 
 		<?php if ( empty( $rows ) ) : ?>
-			<p class="wdplp-no-data">
+			<p class="wcpl-no-data">
 				<?php
 				if ( '' !== $filter_sku || '' !== $filter_cod ) {
-					esc_html_e( 'No rows match the current filters.', WDPLP_TEXT_DOMAIN );
+					esc_html_e( 'No rows match the current filters.', WCPL_TEXT_DOMAIN );
 				} else {
-					esc_html_e( 'No price list data found. Import a CSV file to get started.', WDPLP_TEXT_DOMAIN );
+					esc_html_e( 'No price list data found. Import a CSV file to get started.', WCPL_TEXT_DOMAIN );
 				}
 				?>
 			</p>
 		<?php else : ?>
 
 			<?php // ── Pagination info bar ──────────────────────────────────── ?>
-			<div class="wdplp-pagination-bar">
-				<span class="wdplp-pagination-info">
+			<div class="wcpl-pagination-bar">
+				<span class="wcpl-pagination-info">
 					<?php
 					$last_row_offset = min( $first_row_offset + $per_page - 1, $total_rows );
 					printf(
 						/* translators: 1: first row number, 2: last row number, 3: total rows */
-						esc_html__( 'Showing %1$d–%2$d of %3$d rows', WDPLP_TEXT_DOMAIN ),
+						esc_html__( 'Showing %1$d–%2$d of %3$d rows', WCPL_TEXT_DOMAIN ),
 						(int) $first_row_offset,
 						(int) $last_row_offset,
 						(int) $total_rows
@@ -166,21 +166,21 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 				</span>
 
 				<?php if ( $total_pages > 1 ) : ?>
-					<span class="wdplp-pagination-links">
+					<span class="wcpl-pagination-links">
 						<?php if ( $current_page > 1 ) : ?>
 							<a href="<?php echo $paged_url( 1, $base_url, $filter_sku, $filter_cod ); ?>" class="button button-secondary button-small">
-								&laquo; <?php esc_html_e( 'First', WDPLP_TEXT_DOMAIN ); ?>
+								&laquo; <?php esc_html_e( 'First', WCPL_TEXT_DOMAIN ); ?>
 							</a>
 							<a href="<?php echo $paged_url( $current_page - 1, $base_url, $filter_sku, $filter_cod ); ?>" class="button button-secondary button-small">
-								&lsaquo; <?php esc_html_e( 'Prev', WDPLP_TEXT_DOMAIN ); ?>
+								&lsaquo; <?php esc_html_e( 'Prev', WCPL_TEXT_DOMAIN ); ?>
 							</a>
 						<?php endif; ?>
 
-						<span class="wdplp-page-indicator">
+						<span class="wcpl-page-indicator">
 							<?php
 							printf(
 								/* translators: 1: current page, 2: total pages */
-								esc_html__( 'Page %1$d of %2$d', WDPLP_TEXT_DOMAIN ),
+								esc_html__( 'Page %1$d of %2$d', WCPL_TEXT_DOMAIN ),
 								(int) $current_page,
 								(int) $total_pages
 							);
@@ -189,10 +189,10 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 
 						<?php if ( $current_page < $total_pages ) : ?>
 							<a href="<?php echo $paged_url( $current_page + 1, $base_url, $filter_sku, $filter_cod ); ?>" class="button button-secondary button-small">
-								<?php esc_html_e( 'Next', WDPLP_TEXT_DOMAIN ); ?> &rsaquo;
+								<?php esc_html_e( 'Next', WCPL_TEXT_DOMAIN ); ?> &rsaquo;
 							</a>
 							<a href="<?php echo $paged_url( $total_pages, $base_url, $filter_sku, $filter_cod ); ?>" class="button button-secondary button-small">
-								<?php esc_html_e( 'Last', WDPLP_TEXT_DOMAIN ); ?> &raquo;
+								<?php esc_html_e( 'Last', WCPL_TEXT_DOMAIN ); ?> &raquo;
 							</a>
 						<?php endif; ?>
 					</span>
@@ -200,30 +200,30 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 			</div>
 
 			<?php // ── Main data table ──────────────────────────────────────── ?>
-			<table class="widefat fixed striped wdplp-data-table">
+			<table class="widefat fixed striped wcpl-data-table">
 				<thead>
 					<tr>
-						<th class="wdplp-col-id"><?php esc_html_e( 'ID', WDPLP_TEXT_DOMAIN ); ?></th>
-						<th class="wdplp-col-sku"><?php esc_html_e( 'SKU', WDPLP_TEXT_DOMAIN ); ?></th>
-						<th class="wdplp-col-cod"><?php esc_html_e( 'Code', WDPLP_TEXT_DOMAIN ); ?></th>
-						<th class="wdplp-col-price"><?php esc_html_e( 'Price', WDPLP_TEXT_DOMAIN ); ?></th>
-						<th class="wdplp-col-date"><?php esc_html_e( 'Valid From', WDPLP_TEXT_DOMAIN ); ?></th>
-						<th class="wdplp-col-created"><?php esc_html_e( 'Imported At', WDPLP_TEXT_DOMAIN ); ?></th>
+						<th class="wcpl-col-id"><?php esc_html_e( 'ID', WCPL_TEXT_DOMAIN ); ?></th>
+						<th class="wcpl-col-sku"><?php esc_html_e( 'SKU', WCPL_TEXT_DOMAIN ); ?></th>
+						<th class="wcpl-col-cod"><?php esc_html_e( 'Code', WCPL_TEXT_DOMAIN ); ?></th>
+						<th class="wcpl-col-price"><?php esc_html_e( 'Price', WCPL_TEXT_DOMAIN ); ?></th>
+						<th class="wcpl-col-date"><?php esc_html_e( 'Valid From', WCPL_TEXT_DOMAIN ); ?></th>
+						<th class="wcpl-col-created"><?php esc_html_e( 'Imported At', WCPL_TEXT_DOMAIN ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ( $rows as $row ) : ?>
 						<tr>
-							<td class="wdplp-col-id"><?php echo esc_html( (int) $row['id'] ); ?></td>
-							<td class="wdplp-col-sku"><code><?php echo esc_html( $row['sku'] ); ?></code></td>
-							<td class="wdplp-col-cod">
+							<td class="wcpl-col-id"><?php echo esc_html( (int) $row['id'] ); ?></td>
+							<td class="wcpl-col-sku"><code><?php echo esc_html( $row['sku'] ); ?></code></td>
+							<td class="wcpl-col-cod">
 								<a href="<?php echo $paged_url( 1, $base_url, $filter_sku, $row['cod'] ); ?>">
 									<?php echo esc_html( $row['cod'] ); ?>
 								</a>
 							</td>
-							<td class="wdplp-col-price"><?php echo esc_html( number_format( (float) $row['price'], 2, '.', '' ) ); ?></td>
-							<td class="wdplp-col-date"><?php echo esc_html( $row['date_from'] ); ?></td>
-							<td class="wdplp-col-created"><?php echo esc_html( $row['created_at'] ); ?></td>
+							<td class="wcpl-col-price"><?php echo esc_html( number_format( (float) $row['price'], 2, '.', '' ) ); ?></td>
+							<td class="wcpl-col-date"><?php echo esc_html( $row['date_from'] ); ?></td>
+							<td class="wcpl-col-created"><?php echo esc_html( $row['created_at'] ); ?></td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -231,21 +231,21 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 
 			<?php // ── Bottom pagination links (repeat for convenience) ─────── ?>
 			<?php if ( $total_pages > 1 ) : ?>
-				<div class="wdplp-pagination-bar wdplp-pagination-bar--bottom">
+				<div class="wcpl-pagination-bar wcpl-pagination-bar--bottom">
 					<?php if ( $current_page > 1 ) : ?>
 						<a href="<?php echo $paged_url( 1, $base_url, $filter_sku, $filter_cod ); ?>" class="button button-secondary button-small">
-							&laquo; <?php esc_html_e( 'First', WDPLP_TEXT_DOMAIN ); ?>
+							&laquo; <?php esc_html_e( 'First', WCPL_TEXT_DOMAIN ); ?>
 						</a>
 						<a href="<?php echo $paged_url( $current_page - 1, $base_url, $filter_sku, $filter_cod ); ?>" class="button button-secondary button-small">
-							&lsaquo; <?php esc_html_e( 'Prev', WDPLP_TEXT_DOMAIN ); ?>
+							&lsaquo; <?php esc_html_e( 'Prev', WCPL_TEXT_DOMAIN ); ?>
 						</a>
 					<?php endif; ?>
 
-					<span class="wdplp-page-indicator">
+					<span class="wcpl-page-indicator">
 						<?php
 						printf(
 							/* translators: 1: current page, 2: total pages */
-							esc_html__( 'Page %1$d of %2$d', WDPLP_TEXT_DOMAIN ),
+							esc_html__( 'Page %1$d of %2$d', WCPL_TEXT_DOMAIN ),
 							(int) $current_page,
 							(int) $total_pages
 						);
@@ -254,10 +254,10 @@ $first_row_offset = ( $current_page - 1 ) * $per_page + 1;
 
 					<?php if ( $current_page < $total_pages ) : ?>
 						<a href="<?php echo $paged_url( $current_page + 1, $base_url, $filter_sku, $filter_cod ); ?>" class="button button-secondary button-small">
-							<?php esc_html_e( 'Next', WDPLP_TEXT_DOMAIN ); ?> &rsaquo;
+							<?php esc_html_e( 'Next', WCPL_TEXT_DOMAIN ); ?> &rsaquo;
 						</a>
 						<a href="<?php echo $paged_url( $total_pages, $base_url, $filter_sku, $filter_cod ); ?>" class="button button-secondary button-small">
-							<?php esc_html_e( 'Last', WDPLP_TEXT_DOMAIN ); ?> &raquo;
+							<?php esc_html_e( 'Last', WCPL_TEXT_DOMAIN ); ?> &raquo;
 						</a>
 					<?php endif; ?>
 				</div>

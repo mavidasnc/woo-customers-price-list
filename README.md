@@ -1,8 +1,50 @@
-# WooCommerce Dynamic Price List Pro
+# Customers Price List for WooCommerce
 
 A professional WooCommerce plugin for managing dynamic, per-user price lists
 imported from CSV files. Supports multi-tier pricing (L40, L45, L50N1, etc.)
 with per-user list assignment and full WP-CLI support.
+
+---
+
+## Upgrading from WooCommerce Dynamic Price List Pro (1.x)
+
+Version 2.0.0 renames the plugin: folder and slug `woo-dynamic-pricelist-pro` →
+`woo-customers-price-list`, text domain, PHP namespace `WDPLP\` → `WCPL\`,
+constants `WDPLP_*` → `WCPL_*`, hooks, CSS classes and asset handles `wdplp_*` /
+`wdplp-*` → `wcpl_*` / `wcpl-*`, admin page `wdplp-import` → `wcpl-import`.
+
+Your data carries over as it is: the `custom_price_lists` table and the
+`_assigned_price_list` user meta have no prefix and are shared by both versions.
+On activation, 2.0.0 also renames the import form preferences
+(`_wdplp_last_import_*` → `_wcpl_last_import_*`) and removes the `wdplp_version` option.
+
+WordPress sees the new folder as a different plugin, so the switch is manual:
+
+1. Upload the `woo-customers-price-list` folder (e.g. with `deploy.sh`).
+2. Deactivate **WooCommerce Dynamic Price List Pro**.
+3. Activate **Customers Price List for WooCommerce**. While the old plugin is
+   active the new one stays idle and shows a warning.
+4. Remove the old `woo-dynamic-pricelist-pro` folder **via FTP or SSH**.
+
+> **Never delete the old plugin from Plugins → Installed Plugins.** Its
+> `uninstall.php` drops the shared `custom_price_lists` table and deletes the
+> `_assigned_price_list` meta of every user: all price lists and customer
+> assignments would be lost.
+
+**Sites on 1.4.x with automatic updates.** Version 1.4.x updates itself from the GitHub
+releases, and GitHub redirects the old repository name to the new one. If a 2.0.0 release is
+published, a 1.4.x site installs it into the old `woo-dynamic-pricelist-pro` folder; WordPress then
+no longer finds `woo-dynamic-pricelist-pro.php` and **deactivates the plugin**, so guests see
+prices and customers get the full price until an administrator activates
+**Customers Price List for WooCommerce** again. No data is lost (the old `uninstall.php` does not
+run), but plan the update and reactivate right away, or migrate manually with the steps above
+before publishing the release.
+
+The old hook names (`wdplp_final_price`, `wdplp_login_prompt_html`,
+`wdplp_remote_download_timeout`, `wdplp_before_import`, `wdplp_after_import`)
+still fire through `apply_filters_deprecated()` / `do_action_deprecated()`, with
+a deprecation notice when `WP_DEBUG` is on: rename your callbacks to `wcpl_*`.
+The WP-CLI command (`wp price-list`) is unchanged.
 
 ---
 
@@ -23,11 +65,11 @@ with per-user list assignment and full WP-CLI support.
 
 1. Download or clone this repository into your WordPress plugins directory:
    ```
-   wp-content/plugins/woo_dynamic_pricelist_pro/
+   wp-content/plugins/woo_customers_price_list/
    ```
 2. Log in to the WordPress admin.
 3. Navigate to **Plugins > Installed Plugins**.
-4. Find **WooCommerce Dynamic Price List Pro** and click **Activate**.
+4. Find **Customers Price List for WooCommerce** and click **Activate**.
 
 On activation the plugin automatically:
 - Creates the `{prefix}custom_price_lists` database table.
@@ -36,7 +78,7 @@ On activation the plugin automatically:
 ### Via WP-CLI
 
 ```bash
-wp plugin activate woo_dynamic_pricelist_pro
+wp plugin activate woo_customers_price_list
 ```
 
 ---
@@ -166,12 +208,12 @@ Missing SKUs: PROD-999, PROD-998, PROD-997
 
 | Hook | When | Arguments |
 |------|------|-----------|
-| `wdplp_before_import` | Before CSV parsing begins | `array $source_info` |
-| `wdplp_after_import` | After all rows are processed | `ImportReport $report` |
+| `wcpl_before_import` | Before CSV parsing begins | `array $source_info` |
+| `wcpl_after_import` | After all rows are processed | `ImportReport $report` |
 
 **Example:**
 ```php
-add_action( 'wdplp_after_import', function ( $report ) {
+add_action( 'wcpl_after_import', function ( $report ) {
     if ( $report->rows_skipped > 0 ) {
         // notify admin via email
     }
@@ -182,12 +224,12 @@ add_action( 'wdplp_after_import', function ( $report ) {
 
 | Filter | Purpose | Arguments |
 |--------|---------|-----------|
-| `wdplp_final_price` | Modify the resolved price before display/cart | `float $price, string $sku, int $user_id, string $cod` |
-| `wdplp_remote_download_timeout` | HTTP timeout for remote CSV downloads | `int $seconds` |
+| `wcpl_final_price` | Modify the resolved price before display/cart | `float $price, string $sku, int $user_id, string $cod` |
+| `wcpl_remote_download_timeout` | HTTP timeout for remote CSV downloads | `int $seconds` |
 
 **Example — apply a 10% markup for a specific user role:**
 ```php
-add_filter( 'wdplp_final_price', function ( $price, $sku, $user_id, $cod ) {
+add_filter( 'wcpl_final_price', function ( $price, $sku, $user_id, $cod ) {
     if ( user_has_role( $user_id, 'wholesale' ) ) {
         return $price * 0.90; // 10% discount for wholesale
     }
@@ -219,8 +261,8 @@ CREATE TABLE {prefix}custom_price_lists (
 ## Project Structure
 
 ```
-woo_dynamic_pricelist_pro/
-├── woo-dynamic-pricelist-pro.php   Main bootstrap file
+woo_customers_price_list/
+├── woo-customers-price-list.php   Main bootstrap file
 ├── uninstall.php                   Cleanup on full delete
 ├── includes/
 │   ├── Autoloader.php              PSR-4-style class autoloader
@@ -255,7 +297,7 @@ woo_dynamic_pricelist_pro/
 - User profile "Assigned Price List" dropdown.
 - Frontend price/cart hooks.
 - WP-CLI `wp price-list import` command.
-- Developer hooks: `wdplp_before_import`, `wdplp_after_import`, `wdplp_final_price`.
+- Developer hooks: `wcpl_before_import`, `wcpl_after_import`, `wcpl_final_price`.
 
 ---
 

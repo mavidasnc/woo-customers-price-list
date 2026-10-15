@@ -3,7 +3,7 @@
  * Import Page — Form Handler and Renderer.
  *
  * Responsibilities:
- *   - Hooks into `admin_post_wdplp_import` to process the import form
+ *   - Hooks into `admin_post_wcpl_import` to process the import form
  *     submission (nonce, capability, file/URL validation, import run, redirect).
  *   - Renders the import form HTML (called by AdminController on the "import" tab).
  *
@@ -19,20 +19,20 @@
  * and passed here via render_content() on the next page load.
  *
  * Security:
- *   - Nonce: action 'wdplp_import', field name 'wdplp_import_nonce'.
+ *   - Nonce: action 'wcpl_import', field name 'wcpl_import_nonce'.
  *   - Capability: 'manage_woocommerce'.
  *   - File extension whitelist: .csv, .txt.
  *   - URL validation: Helpers::is_valid_remote_url() (wraps wp_http_validate_url).
  *
- * @package WDPLP\Admin
+ * @package WCPL\Admin
  * @since   1.0.0
  */
 
-namespace WDPLP\Admin;
+namespace WCPL\Admin;
 
-use WDPLP\Helpers;
-use WDPLP\Import\CsvImporter;
-use WDPLP\Import\ImportReport;
+use WCPL\Helpers;
+use WCPL\Import\CsvImporter;
+use WCPL\Import\ImportReport;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -47,14 +47,14 @@ class ImportPage {
 	/**
 	 * Nonce action and field name constants.
 	 */
-	private const NONCE_ACTION = 'wdplp_import';
-	private const NONCE_FIELD  = 'wdplp_import_nonce';
+	private const NONCE_ACTION = 'wcpl_import';
+	private const NONCE_FIELD  = 'wcpl_import_nonce';
 
 	/**
 	 * POST action name (used in the form's hidden 'action' field
 	 * and mapped to admin_post_{action}).
 	 */
-	private const POST_ACTION = 'wdplp_import';
+	private const POST_ACTION = 'wcpl_import';
 
 	/**
 	 * Allowed file extensions for uploaded CSV files.
@@ -75,9 +75,9 @@ class ImportPage {
 	 * User meta keys for persisting last import preferences across sessions.
 	 * Stored per-user so multiple admins do not overwrite each other's settings.
 	 */
-	private const META_LAST_SOURCE = '_wdplp_last_import_source';
-	private const META_LAST_URL    = '_wdplp_last_import_url';
-	private const META_LAST_LIMIT  = '_wdplp_last_import_limit';
+	private const META_LAST_SOURCE = '_wcpl_last_import_source';
+	private const META_LAST_URL    = '_wcpl_last_import_url';
+	private const META_LAST_LIMIT  = '_wcpl_last_import_limit';
 
 	// ---------------------------------------------------------------------------
 	// Hooks
@@ -90,7 +90,7 @@ class ImportPage {
 	 */
 	public function register_hooks(): void {
 		// Handle the import form POST. The hook fires for authenticated users;
-		// unauthenticated POST attempts go to admin_post_nopriv_wdplp_import
+		// unauthenticated POST attempts go to admin_post_nopriv_wcpl_import
 		// which we intentionally do not register.
 		add_action( 'admin_post_' . self::POST_ACTION, [ $this, 'handle_import' ] );
 	}
@@ -113,8 +113,8 @@ class ImportPage {
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die(
-				esc_html__( 'You do not have permission to perform this action.', WDPLP_TEXT_DOMAIN ),
-				esc_html__( 'Permission Denied', WDPLP_TEXT_DOMAIN ),
+				esc_html__( 'You do not have permission to perform this action.', WCPL_TEXT_DOMAIN ),
+				esc_html__( 'Permission Denied', WCPL_TEXT_DOMAIN ),
 				[ 'response' => 403 ]
 			);
 		}
@@ -124,48 +124,48 @@ class ImportPage {
 		$error    = '';
 
 		// ── Determine source ───────────────────────────────────────────────────
-		$source = isset( $_POST['wdplp_source'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			? sanitize_key( wp_unslash( $_POST['wdplp_source'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$source = isset( $_POST['wcpl_source'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			? sanitize_key( wp_unslash( $_POST['wcpl_source'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			: 'file';
 
 		// ── Row limit (0 = no limit) ───────────────────────────────────────────
-		$limit = isset( $_POST['wdplp_limit_rows'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			? max( 0, (int) $_POST['wdplp_limit_rows'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$limit = isset( $_POST['wcpl_limit_rows'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			? max( 0, (int) $_POST['wcpl_limit_rows'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			: 0;
 
 		if ( 'url' === $source ) {
 			// ── URL import ─────────────────────────────────────────────────────
-			$raw_url = isset( $_POST['wdplp_url'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
-				? sanitize_text_field( wp_unslash( $_POST['wdplp_url'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$raw_url = isset( $_POST['wcpl_url'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				? sanitize_text_field( wp_unslash( $_POST['wcpl_url'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				: '';
 
 			$url = esc_url_raw( $raw_url );
 
 			if ( empty( $url ) ) {
-				$error = __( 'Please enter a valid CSV URL to import from.', WDPLP_TEXT_DOMAIN );
+				$error = __( 'Please enter a valid CSV URL to import from.', WCPL_TEXT_DOMAIN );
 			} elseif ( ! Helpers::is_valid_remote_url( $url ) ) {
-				$error = __( 'The URL provided is not valid or is not allowed.', WDPLP_TEXT_DOMAIN );
+				$error = __( 'The URL provided is not valid or is not allowed.', WCPL_TEXT_DOMAIN );
 			} else {
 				$report = $importer->import_from_url( $url, false, $limit );
 			}
 		} else {
 			// ── File upload import ─────────────────────────────────────────────
-			$upload_error = $_FILES['wdplp_csv_file']['error'] ?? UPLOAD_ERR_NO_FILE; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			$upload_error = $_FILES['wcpl_csv_file']['error'] ?? UPLOAD_ERR_NO_FILE; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 
 			if ( UPLOAD_ERR_NO_FILE === $upload_error ) {
-				$error = __( 'Please select a CSV file to upload.', WDPLP_TEXT_DOMAIN );
+				$error = __( 'Please select a CSV file to upload.', WCPL_TEXT_DOMAIN );
 			} elseif ( UPLOAD_ERR_OK !== $upload_error ) {
 				$error = sprintf(
 					/* translators: %d: PHP file upload error code */
-					__( 'File upload failed with error code %d. Please try again.', WDPLP_TEXT_DOMAIN ),
+					__( 'File upload failed with error code %d. Please try again.', WCPL_TEXT_DOMAIN ),
 					(int) $upload_error
 				);
 			} else {
-				$tmp_name  = $_FILES['wdplp_csv_file']['tmp_name'] ?? ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-				$orig_name = $_FILES['wdplp_csv_file']['name'] ?? ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+				$tmp_name  = $_FILES['wcpl_csv_file']['tmp_name'] ?? ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+				$orig_name = $_FILES['wcpl_csv_file']['name'] ?? ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 
 				if ( ! $this->is_valid_csv_upload( (string) $tmp_name, (string) $orig_name ) ) {
-					$error = __( 'Invalid file type. Please upload a .csv or .txt file.', WDPLP_TEXT_DOMAIN );
+					$error = __( 'Invalid file type. Please upload a .csv or .txt file.', WCPL_TEXT_DOMAIN );
 				} else {
 					$report = $importer->import_from_file( (string) $tmp_name, false, $limit );
 				}
@@ -181,7 +181,7 @@ class ImportPage {
 
 		// ── Store result in transient for display after redirect ───────────────
 		if ( null !== $report ) {
-			$transient_key = 'wdplp_import_result_' . get_current_user_id();
+			$transient_key = 'wcpl_import_result_' . get_current_user_id();
 			set_transient( $transient_key, $report->to_array(), self::RESULT_TRANSIENT_TTL );
 		}
 
@@ -233,7 +233,7 @@ class ImportPage {
 		$last_url    = get_user_meta( $user_id, self::META_LAST_URL,    true ) ?: '';
 		$last_limit  = (int) ( get_user_meta( $user_id, self::META_LAST_LIMIT, true ) ?: 0 );
 
-		require WDPLP_PLUGIN_DIR . 'admin/views/import-page.php';
+		require WCPL_PLUGIN_DIR . 'admin/views/import-page.php';
 	}
 
 	// ---------------------------------------------------------------------------

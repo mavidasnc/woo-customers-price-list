@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to **WooCommerce Dynamic Price List Pro** are documented here.
+All notable changes to **Customers Price List for WooCommerce** (formerly WooCommerce Dynamic Price List Pro) are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,6 +8,31 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ---
 
 ## [Unreleased]
+
+---
+
+## [2.0.0] — 2026-10-15
+
+### Changed
+
+- **Plugin rinominato** da *WooCommerce Dynamic Price List Pro* (`woo-dynamic-pricelist-pro`)
+  a *Customers Price List for WooCommerce* (`woo-customers-price-list`): cartella, file
+  principale, text domain e file di traduzione, repository GitHub, namespace `WDPLP\` → `WCPL\`,
+  costanti `WDPLP_*` → `WCPL_*`, hook, classi CSS, handle e oggetto JS `wdplp*` → `wcpl*`,
+  pagina admin `wdplp-import` → `wcpl-import`.
+- **Updater** (`includes/Updater.php`): legge le release di `mavidasnc/woo-customers-price-list`,
+  cartella di destinazione `woo-customers-price-list`, cache `wcpl_github_release`.
+- Tabella `custom_price_lists` e meta `_assigned_price_list` invariati: i dati passano senza migrazione.
+
+### Added
+
+- **Migrazione all'attivazione** (`includes/Activator.php`): rinomina i meta `_wdplp_last_import_*`
+  in `_wcpl_last_import_*`, rimuove l'opzione `wdplp_version` e il transient `wdplp_github_release`.
+- **Alias deprecati** per i vecchi hook `wdplp_*` (`apply_filters_deprecated` / `do_action_deprecated`).
+- **Guardia** (`includes/Plugin.php`): se il vecchio plugin è ancora attivo il nuovo resta inattivo
+  e mostra un avviso, per evitare prezzi filtrati due volte e il comando WP-CLI registrato due volte.
+- Sezione del README sulla migrazione da 1.x: il vecchio plugin va rimosso via FTP/SSH, mai da
+  wp-admin, perché il suo `uninstall.php` cancella tabella e assegnazioni.
 
 ---
 

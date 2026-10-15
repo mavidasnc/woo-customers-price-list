@@ -15,13 +15,13 @@
  *     is placed in the system's temporary directory, not inside the webroot.
  *   - The temp file is deleted by the caller (CsvImporter) after use.
  *
- * @package WDPLP\Import
+ * @package WCPL\Import
  * @since   1.0.0
  */
 
-namespace WDPLP\Import;
+namespace WCPL\Import;
 
-use WDPLP\Helpers;
+use WCPL\Helpers;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -36,7 +36,7 @@ class RemoteDownloader {
 	/**
 	 * Default HTTP request timeout in seconds.
 	 *
-	 * Can be overridden via the wdplp_remote_download_timeout filter.
+	 * Can be overridden via the wcpl_remote_download_timeout filter.
 	 *
 	 * @var int
 	 */
@@ -84,14 +84,17 @@ class RemoteDownloader {
 		 * @param int    $timeout Timeout in seconds. Default 60.
 		 * @param string $url     The URL being downloaded.
 		 */
-		$timeout = (int) apply_filters( 'wdplp_remote_download_timeout', self::DEFAULT_TIMEOUT, $url );
+		$timeout = (int) apply_filters( 'wcpl_remote_download_timeout', self::DEFAULT_TIMEOUT, $url );
+
+		// Backward compatibility: the pre-2.0.0 hook name still works, with a deprecation notice.
+		$timeout = (int) apply_filters_deprecated( 'wdplp_remote_download_timeout', [ $timeout, $url ], '2.0.0', 'wcpl_remote_download_timeout' );
 
 		// ── 3. Make the HTTP request ───────────────────────────────────────────
 		$response = wp_remote_get(
 			$url,
 			[
 				'timeout'    => $timeout,
-				'user-agent' => 'WordPress/WDPLP-Importer (+' . get_bloginfo( 'url' ) . ')',
+				'user-agent' => 'WordPress/WCPL-Importer (+' . get_bloginfo( 'url' ) . ')',
 				'sslverify'  => true, // Never disable SSL verification in production.
 			]
 		);
@@ -139,7 +142,7 @@ class RemoteDownloader {
 
 		// ── 8. Write body to a temporary file ─────────────────────────────────
 		// wp_tempnam() creates a unique temp file in the system temp directory.
-		$temp_file = wp_tempnam( 'wdplp-csv-' );
+		$temp_file = wp_tempnam( 'wcpl-csv-' );
 
 		if ( false === $temp_file ) {
 			throw new \RuntimeException( 'Could not create a temporary file for the downloaded CSV.' );

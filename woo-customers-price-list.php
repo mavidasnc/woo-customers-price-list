@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name:       WooCommerce Dynamic Price List Pro
- * Plugin URI:        https://github.com/mavidasnc/woo-dynamic-pricelist-pro
+ * Plugin Name:       Customers Price List for WooCommerce
+ * Plugin URI:        https://github.com/mavidasnc/woo-customers-price-list
  * Description:       Professional WooCommerce plugin for dynamic, per-user price lists imported from CSV. Supports multi-tier pricing (L40, L45, L50N1, etc.) with per-user assignment and full WP-CLI support.
- * Version:           1.4.2
+ * Version:           2.0.0
  * Author:            Mavida s.n.c
  * Author URI:        https://mavida.com
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       woo-dynamic-pricelist-pro
+ * Text Domain:       woo-customers-price-list
  * Domain Path:       /languages
  * Requires at least: 6.0
  * Requires PHP:      8.0
@@ -38,8 +38,8 @@ if (version_compare(PHP_VERSION, '8.0', '<')) {
                 esc_html(
                     sprintf(
                         /* translators: 1: Plugin name, 2: Required PHP version, 3: Current PHP version */
-                        __('%1$s requires PHP %2$s or higher. You are running PHP %3$s. Please upgrade PHP or deactivate the plugin.', 'woo-dynamic-pricelist-pro'),
-                        'WooCommerce Dynamic Price List Pro',
+                        __('%1$s requires PHP %2$s or higher. You are running PHP %3$s. Please upgrade PHP or deactivate the plugin.', 'woo-customers-price-list'),
+                        'Customers Price List for WooCommerce',
                         '8.0',
                         PHP_VERSION
                     )
@@ -67,49 +67,49 @@ if (version_compare(PHP_VERSION, '8.0', '<')) {
  * Plugin version. Bump this on every release.
  * Used for cache-busting asset URLs and database migration checks.
  */
-define('WDPLP_VERSION', '1.4.2');
+define('WCPL_VERSION', '2.0.0');
 
 /*
  * Absolute path to the plugin root directory (trailing slash included).
- * Example: /var/www/html/wp-content/plugins/woo_dynamic_pricelist_pro/
+ * Example: /var/www/html/wp-content/plugins/woo_customers_price_list/
  */
-define('WDPLP_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('WCPL_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
 /*
  * Public URL of the plugin root directory (trailing slash included).
  * Used for enqueueing CSS and JS assets.
  */
-define('WDPLP_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('WCPL_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 /*
  * Absolute path to this bootstrap file.
  * Used for register_activation_hook, register_deactivation_hook, and
  * plugin_basename() calls that need to reference the main plugin file.
  */
-define('WDPLP_PLUGIN_FILE', __FILE__);
+define('WCPL_PLUGIN_FILE', __FILE__);
 
 /*
  * Text domain for i18n. Must match the "Text Domain" header above.
  */
-define('WDPLP_TEXT_DOMAIN', 'woo-dynamic-pricelist-pro');
+define('WCPL_TEXT_DOMAIN', 'woo-customers-price-list');
 
 /*
  * Minimum WooCommerce version required.
  * The Plugin singleton re-checks this at runtime for a user-friendly notice.
  */
-define('WDPLP_MIN_WC', '7.0');
+define('WCPL_MIN_WC', '7.0');
 
 /*
  * Minimum PHP version string (already enforced above, kept as constant for
  * programmatic access elsewhere in the codebase).
  */
-define('WDPLP_MIN_PHP', '8.0');
+define('WCPL_MIN_PHP', '8.0');
 
 /*
  * Absolute path to the log directory inside wp-content/uploads/.
  * The directory is created on activation and protected with .htaccess.
  */
-define('WDPLP_LOG_DIR', WP_CONTENT_DIR.'/uploads/wc-price-logs/');
+define('WCPL_LOG_DIR', WP_CONTENT_DIR.'/uploads/wc-price-logs/');
 
 // ---------------------------------------------------------------------------
 // Autoloader
@@ -118,11 +118,11 @@ define('WDPLP_LOG_DIR', WP_CONTENT_DIR.'/uploads/wc-price-logs/');
 /**
  * Load the PSR-4-style autoloader before anything else.
  * The Autoloader class registers its spl_autoload_register callback
- * immediately in the ::register() call below, making all WDPLP\* classes
+ * immediately in the ::register() call below, making all WCPL\* classes
  * available from this point onward.
  */
-require_once WDPLP_PLUGIN_DIR.'includes/Autoloader.php';
-WDPLP\Autoloader::register();
+require_once WCPL_PLUGIN_DIR.'includes/Autoloader.php';
+WCPL\Autoloader::register();
 
 // ---------------------------------------------------------------------------
 // Activation / Deactivation Hooks
@@ -136,14 +136,14 @@ WDPLP\Autoloader::register();
  * not inside a class constructor or a hook callback, for WordPress to
  * detect and register it correctly.
  */
-register_activation_hook(WDPLP_PLUGIN_FILE, [WDPLP\Activator::class, 'activate']);
+register_activation_hook(WCPL_PLUGIN_FILE, [WCPL\Activator::class, 'activate']);
 
 /*
  * Deactivation hook: performs safe cleanup (no destructive operations).
  * The database table and logs are preserved on deactivation; they are
  * removed only on full uninstall (see uninstall.php).
  */
-register_deactivation_hook(WDPLP_PLUGIN_FILE, [WDPLP\Deactivator::class, 'deactivate']);
+register_deactivation_hook(WCPL_PLUGIN_FILE, [WCPL\Deactivator::class, 'deactivate']);
 
 // ---------------------------------------------------------------------------
 // WooCommerce HPOS (High-Performance Order Storage) Compatibility Declaration
@@ -161,7 +161,7 @@ add_action(
         if (class_exists(Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
             Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
                 'custom_order_tables',
-                WDPLP_PLUGIN_FILE,
+                WCPL_PLUGIN_FILE,
                 true
             );
         }
@@ -181,4 +181,4 @@ add_action(
  * We use a static factory method so the singleton is created lazily and
  * only once, regardless of how many times this action fires.
  */
-add_action('plugins_loaded', [WDPLP\Plugin::class, 'get_instance'], 11);
+add_action('plugins_loaded', [WCPL\Plugin::class, 'get_instance'], 11);

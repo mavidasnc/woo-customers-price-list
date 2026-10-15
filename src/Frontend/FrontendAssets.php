@@ -8,17 +8,17 @@
  * Assets loaded:
  *   - Select2 CSS + JS (local vendor copy, v4.1.0-rc.0)
  *   - Select2 Italian locale
- *   - wdplp-public.css (custom plugin styles, e.g. .uc-filter-num)
- *   - wdplp-public.js (Select2 init on #sidebar select)
+ *   - wcpl-public.css (custom plugin styles, e.g. .uc-filter-num)
+ *   - wcpl-public.js (Select2 init on #sidebar select)
  *
  * This class is intentionally separate from PriceHooks so that styling
  * can be added or removed without touching the pricing logic.
  *
- * @package WDPLP\Frontend
+ * @package WCPL\Frontend
  * @since   1.3.0
  */
 
-namespace WDPLP\Frontend;
+namespace WCPL\Frontend;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -60,10 +60,10 @@ class FrontendAssets {
 	 *
 	 * Load order:
 	 *   1. Select2 CSS
-	 *   2. wdplp-public CSS (plugin custom styles)
+	 *   2. wcpl-public CSS (plugin custom styles)
 	 *   3. Select2 JS  (depends on jquery, already enqueued by WordPress)
 	 *   4. Select2 Italian locale (depends on Select2 JS)
-	 *   5. wdplp-public JS — init script (depends on Select2 JS + locale)
+	 *   5. wcpl-public JS — init script (depends on Select2 JS + locale)
 	 *
 	 * @return void
 	 */
@@ -72,11 +72,11 @@ class FrontendAssets {
 			return;
 		}
 
-		$vendor = WDPLP_PLUGIN_URL . 'public/vendor/select2/';
+		$vendor = WCPL_PLUGIN_URL . 'public/vendor/select2/';
 
 		// ── Select2 CSS ───────────────────────────────────────────────────────
 		wp_enqueue_style(
-			'wdplp-select2',
+			'wcpl-select2',
 			$vendor . 'select2.min.css',
 			[],
 			self::SELECT2_VERSION
@@ -84,15 +84,15 @@ class FrontendAssets {
 
 		// ── Plugin custom CSS ─────────────────────────────────────────────────
 		wp_enqueue_style(
-			'wdplp-public',
-			WDPLP_PLUGIN_URL . 'public/css/wdplp-public.css',
+			'wcpl-public',
+			WCPL_PLUGIN_URL . 'public/css/wcpl-public.css',
 			[],
-			WDPLP_VERSION
+			WCPL_VERSION
 		);
 
 		// ── Select2 JS (requires jQuery, globally available in WordPress) ─────
 		wp_enqueue_script(
-			'wdplp-select2',
+			'wcpl-select2',
 			$vendor . 'select2.min.js',
 			[ 'jquery' ],
 			self::SELECT2_VERSION,
@@ -101,19 +101,19 @@ class FrontendAssets {
 
 		// ── Select2 Italian locale ────────────────────────────────────────────
 		wp_enqueue_script(
-			'wdplp-select2-i18n-it',
+			'wcpl-select2-i18n-it',
 			$vendor . 'i18n/it.js',
-			[ 'wdplp-select2' ],
+			[ 'wcpl-select2' ],
 			self::SELECT2_VERSION,
 			true
 		);
 
 		// ── Plugin init script ────────────────────────────────────────────────
 		wp_enqueue_script(
-			'wdplp-public',
-			WDPLP_PLUGIN_URL . 'public/js/wdplp-public.js',
-			[ 'wdplp-select2', 'wdplp-select2-i18n-it' ],
-			WDPLP_VERSION,
+			'wcpl-public',
+			WCPL_PLUGIN_URL . 'public/js/wcpl-public.js',
+			[ 'wcpl-select2', 'wcpl-select2-i18n-it' ],
+			WCPL_VERSION,
 			true
 		);
 	}

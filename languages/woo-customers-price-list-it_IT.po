@@ -1,11 +1,11 @@
-# WooCommerce Dynamic Price List Pro — Traduzione Italiana
+# Customers Price List for WooCommerce — Traduzione Italiana
 # Copyright (C) 2025 Mavida s.n.c.
 # This file is distributed under the GPL-2.0-or-later license.
 # Traduttore: Mavida s.n.c. <info@mavida.com>, 2025.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Dynamic Price List Pro 1.0.0\n"
+"Project-Id-Version: Customers Price List for WooCommerce 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-26 00:00+0000\n"
 "PO-Revision-Date: 2026-02-26 00:00+0000\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Manual\n"
-"X-Domain: woo-dynamic-pricelist-pro\n"
+"X-Domain: woo-customers-price-list\n"
 
 #. translators: 1: Plugin name, 2: Required PHP version, 3: Current PHP version
-#: woo-dynamic-pricelist-pro.php:41
+#: woo-customers-price-list.php:41
 msgid "%1$s requires PHP %2$s or higher. You are running PHP %3$s. Please upgrade PHP or deactivate the plugin."
 msgstr "%1$s richiede PHP %2$s o superiore. Stai usando PHP %3$s. Aggiorna PHP o disattiva il plugin."
 
 #. translators: %s: WooCommerce plugin name
 #: includes/Plugin.php:257
-msgid "<strong>WooCommerce Dynamic Price List Pro</strong> requires %s to be installed and active."
-msgstr "<strong>WooCommerce Dynamic Price List Pro</strong> richiede che %s sia installato e attivo."
+msgid "<strong>Customers Price List for WooCommerce</strong> requires %s to be installed and active."
+msgstr "<strong>Customers Price List for WooCommerce</strong> richiede che %s sia installato e attivo."
 
 #. translators: 1: Plugin name, 2: Required WooCommerce version, 3: Installed WooCommerce version
 #: includes/Plugin.php:279
@@ -462,3 +462,7 @@ msgstr "Permessi insufficienti."
 #: includes/Updater.php:305
 msgid "Unable to contact GitHub. Please retry later."
 msgstr "Impossibile contattare GitHub. Riprova più tardi."
+
+#: includes/Plugin.php
+msgid "Customers Price List for WooCommerce is idle because the old \"WooCommerce Dynamic Price List Pro\" plugin is still active. Deactivate the old plugin and remove its folder via FTP or SSH: do not delete it from the Plugins screen, because its uninstall routine erases the price lists and the customer assignments."
+msgstr "Customers Price List for WooCommerce è inattivo perché il vecchio plugin \"WooCommerce Dynamic Price List Pro\" è ancora attivo. Disattiva il vecchio plugin e rimuovi la sua cartella via FTP o SSH: non eliminarlo dalla schermata Plugin, perché la sua procedura di disinstallazione cancella i listini e le assegnazioni dei clienti."

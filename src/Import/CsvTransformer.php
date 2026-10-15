@@ -30,13 +30,13 @@
  *   - Empty numeric cells are silently skipped (no price_list_row created).
  *   - Invalid (non-numeric) price cells produce a warning in TransformResult.
  *
- * @package WDPLP\Import
+ * @package WCPL\Import
  * @since   1.0.0
  */
 
-namespace WDPLP\Import;
+namespace WCPL\Import;
 
-use WDPLP\Helpers;
+use WCPL\Helpers;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {

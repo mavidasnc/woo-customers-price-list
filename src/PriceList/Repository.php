@@ -15,14 +15,14 @@
  *     callers can check success without catching exceptions.
  *   - Read methods return typed PHP values (never raw $wpdb row objects).
  *
- * @package WDPLP\PriceList
+ * @package WCPL\PriceList
  * @since   1.0.0
  */
 
-namespace WDPLP\PriceList;
+namespace WCPL\PriceList;
 
-use WDPLP\Database;
-use WDPLP\Helpers;
+use WCPL\Database;
+use WCPL\Helpers;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {

@@ -1,5 +1,5 @@
 /**
- * WooCommerce Dynamic Price List Pro — Admin JavaScript
+ * Customers Price List for WooCommerce — Admin JavaScript
  *
  * Enhances the import admin page with:
  *   1. Source toggle: show/hide the file upload or URL section based on the
@@ -8,16 +8,16 @@
  *      the import is running to prevent double submissions.
  *   3. File validation: basic client-side check that the selected file has an
  *      accepted extension (.csv or .txt) before submitting.
- *   4. Updates tab: force a GitHub-release check via wdplp_check_update AJAX.
+ *   4. Updates tab: force a GitHub-release check via wcpl_check_update AJAX.
  *
  * Depends on: jQuery (loaded by WordPress admin).
- * Data: `wdplpAdmin` object localised by AdminController::enqueue_assets().
+ * Data: `wcplAdmin` object localised by AdminController::enqueue_assets().
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.0.0
  */
 
-/* global wdplpAdmin, jQuery */
+/* global wcplAdmin, jQuery */
 
 ( function ( $ ) {
 	'use strict';
@@ -46,9 +46,9 @@
 	 * previously selected value (e.g. after a Back navigation).
 	 */
 	function initSourceToggle() {
-		var $radios     = $( 'input[name="wdplp_source"]' );
-		var $fileSection = $( '#wdplp-file-section' );
-		var $urlSection  = $( '#wdplp-url-section' );
+		var $radios     = $( 'input[name="wcpl_source"]' );
+		var $fileSection = $( '#wcpl-file-section' );
+		var $urlSection  = $( '#wcpl-url-section' );
 
 		if ( ! $radios.length ) {
 			return; // Not on the import page.
@@ -59,14 +59,14 @@
 		 * hide the other one.
 		 */
 		function applyToggle() {
-			var selectedSource = $( 'input[name="wdplp_source"]:checked' ).val();
+			var selectedSource = $( 'input[name="wcpl_source"]:checked' ).val();
 
 			if ( 'url' === selectedSource ) {
 				$fileSection.hide();
-				$urlSection.show().find( '#wdplp_url' ).trigger( 'focus' );
+				$urlSection.show().find( '#wcpl_url' ).trigger( 'focus' );
 			} else {
 				$urlSection.hide();
-				$fileSection.show().find( '#wdplp_csv_file' ).trigger( 'focus' );
+				$fileSection.show().find( '#wcpl_csv_file' ).trigger( 'focus' );
 			}
 		}
 
@@ -89,9 +89,9 @@
 	 *   - If invalid, show an inline error and stop submission.
 	 */
 	function initFormSubmit() {
-		var $form   = $( '#wdplp-import-form' );
-		var $btn    = $( '#wdplp-import-btn' );
-		var $spinner = $form.find( '.wdplp-spinner' );
+		var $form   = $( '#wcpl-import-form' );
+		var $btn    = $( '#wcpl-import-btn' );
+		var $spinner = $form.find( '.wcpl-spinner' );
 
 		if ( ! $form.length ) {
 			return;
@@ -111,8 +111,8 @@
 			clearInlineError();
 
 			// Disable button + show spinner to prevent double-submit.
-			var importingText = ( wdplpAdmin && wdplpAdmin.importing_text )
-				? wdplpAdmin.importing_text
+			var importingText = ( wcplAdmin && wcplAdmin.importing_text )
+				? wcplAdmin.importing_text
 				: 'Importing, please wait…';
 
 			$btn
@@ -140,10 +140,10 @@
 	 * @returns {string|null}
 	 */
 	function validateForm() {
-		var source = $( 'input[name="wdplp_source"]:checked' ).val();
+		var source = $( 'input[name="wcpl_source"]:checked' ).val();
 
 		if ( 'url' === source ) {
-			var url = $.trim( $( '#wdplp_url' ).val() );
+			var url = $.trim( $( '#wcpl_url' ).val() );
 			if ( ! url ) {
 				return 'Please enter a CSV URL before importing.';
 			}
@@ -152,7 +152,7 @@
 				return 'Please enter a valid URL (must start with http:// or https://).';
 			}
 		} else {
-			var fileInput = $( '#wdplp_csv_file' );
+			var fileInput = $( '#wcpl_csv_file' );
 			var files = fileInput[ 0 ] && fileInput[ 0 ].files;
 
 			if ( ! files || files.length === 0 ) {
@@ -183,17 +183,17 @@
 	 * @param {string} message Error message to display.
 	 */
 	function showInlineError( message ) {
-		var $existingError = $( '#wdplp-inline-error' );
+		var $existingError = $( '#wcpl-inline-error' );
 
 		if ( $existingError.length ) {
 			$existingError.text( message ).show();
 		} else {
 			var $error = $( '<p>', {
-				id:    'wdplp-inline-error',
-				class: 'wdplp-inline-error notice notice-error inline',
+				id:    'wcpl-inline-error',
+				class: 'wcpl-inline-error notice notice-error inline',
 				text:  message
 			} );
-			$( '#wdplp-import-btn' ).after( $error );
+			$( '#wcpl-import-btn' ).after( $error );
 		}
 	}
 
@@ -201,7 +201,7 @@
 	 * Remove any currently visible inline error message.
 	 */
 	function clearInlineError() {
-		$( '#wdplp-inline-error' ).hide();
+		$( '#wcpl-inline-error' ).hide();
 	}
 
 	// ─────────────────────────────────────────────────────────────────────────
@@ -209,27 +209,27 @@
 	// ─────────────────────────────────────────────────────────────────────────
 
 	/**
-	 * Wire up the "Check for updates" button: calls wdplp_check_update AJAX,
+	 * Wire up the "Check for updates" button: calls wcpl_check_update AJAX,
 	 * fills the latest-version cell and renders an availability notice.
 	 */
 	function initUpdates() {
-		var $btn = $( '#wdplp-check-update' );
+		var $btn = $( '#wcpl-check-update' );
 
 		if ( ! $btn.length ) { return; }
 
-		var i18n    = ( wdplpAdmin && wdplpAdmin.i18n ) ? wdplpAdmin.i18n : {};
-		var $status = $( '#wdplp-update-status' );
-		var $latest = $( '#wdplp-latest-version' );
-		var $result = $( '#wdplp-update-result' );
+		var i18n    = ( wcplAdmin && wcplAdmin.i18n ) ? wcplAdmin.i18n : {};
+		var $status = $( '#wcpl-update-status' );
+		var $latest = $( '#wcpl-latest-version' );
+		var $result = $( '#wcpl-update-result' );
 
 		$btn.on( 'click', function () {
 			$btn.prop( 'disabled', true );
 			$status.text( i18n.checkingUpdate || '' );
 			$result.empty();
 
-			$.post( wdplpAdmin.ajaxUrl, {
-				action: 'wdplp_check_update',
-				nonce:  wdplpAdmin.nonce
+			$.post( wcplAdmin.ajaxUrl, {
+				action: 'wcpl_check_update',
+				nonce:  wcplAdmin.nonce
 			} )
 				.done( function ( response ) {
 					if ( ! response || ! response.success || ! response.data ) {
@@ -263,11 +263,11 @@
 	/**
 	 * Costruisce il notice "nuova versione disponibile" con changelog e pulsante update.
 	 *
-	 * @param {Object} d  Dati della risposta wdplp_check_update.
+	 * @param {Object} d  Dati della risposta wcpl_check_update.
 	 * @return {string}   Markup HTML.
 	 */
 	function buildUpdateNotice( d ) {
-		var i18n    = ( wdplpAdmin && wdplpAdmin.i18n ) ? wdplpAdmin.i18n : {};
+		var i18n    = ( wcplAdmin && wcplAdmin.i18n ) ? wcplAdmin.i18n : {};
 		var heading = ( i18n.updateAvailable || '%s' ).replace( '%s', escHtml( d.latest ) );
 
 		var html = '<div class="notice notice-warning inline"><p><strong>' + heading + '</strong></p>';
@@ -275,7 +275,7 @@
 		// Il changelog è HTML già sanitizzato lato server (wp_kses_post) → inserito as-is.
 		if ( d.changelog ) {
 			html += '<details style="margin:6px 0;"><summary>' + escHtml( i18n.changelog || 'Changelog' ) +
-				'</summary><div class="wdplp-changelog">' + d.changelog + '</div></details>';
+				'</summary><div class="wcpl-changelog">' + d.changelog + '</div></details>';
 		}
 
 		if ( d.upgrade_url ) {

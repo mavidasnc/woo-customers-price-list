@@ -19,11 +19,11 @@
  *   3. Other indexes use KEY, not INDEX.
  *   4. No trailing comma on the last definition before the closing parenthesis.
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.0.0
  */
 
-namespace WDPLP;
+namespace WCPL;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {

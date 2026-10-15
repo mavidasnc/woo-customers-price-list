@@ -39,36 +39,36 @@ $last_limit  = $last_limit  ?? 0;
     $has_skus_miss = !empty($result['skus_not_found_count']) && $result['skus_not_found_count'] > 0;
     $notice_class = $has_errors ? 'notice-error' : ($has_skus_miss ? 'notice-warning' : 'notice-success');
     ?>
-	<div class="notice <?php echo esc_attr($notice_class); ?> wdplp-import-notice">
+	<div class="notice <?php echo esc_attr($notice_class); ?> wcpl-import-notice">
 
-		<h3><?php esc_html_e('Import Completed', WDPLP_TEXT_DOMAIN); ?></h3>
+		<h3><?php esc_html_e('Import Completed', WCPL_TEXT_DOMAIN); ?></h3>
 
-		<table class="wdplp-stats-table">
+		<table class="wcpl-stats-table">
 			<tbody>
 				<tr>
-					<th><?php esc_html_e('Total rows processed', WDPLP_TEXT_DOMAIN); ?></th>
+					<th><?php esc_html_e('Total rows processed', WCPL_TEXT_DOMAIN); ?></th>
 					<td><strong><?php echo esc_html((int) ($result['total_rows'] ?? 0)); ?></strong></td>
 				</tr>
 				<tr>
-					<th><?php esc_html_e('WooCommerce prices updated', WDPLP_TEXT_DOMAIN); ?></th>
+					<th><?php esc_html_e('WooCommerce prices updated', WCPL_TEXT_DOMAIN); ?></th>
 					<td><strong><?php echo esc_html((int) ($result['wc_prices_updated'] ?? 0)); ?></strong></td>
 				</tr>
 				<tr>
-					<th><?php esc_html_e('Price list rows inserted/updated', WDPLP_TEXT_DOMAIN); ?></th>
+					<th><?php esc_html_e('Price list rows inserted/updated', WCPL_TEXT_DOMAIN); ?></th>
 					<td><strong><?php echo esc_html((int) ($result['pricelist_rows_upserted'] ?? 0)); ?></strong></td>
 				</tr>
 				<tr>
-					<th><?php esc_html_e('Rows skipped', WDPLP_TEXT_DOMAIN); ?></th>
+					<th><?php esc_html_e('Rows skipped', WCPL_TEXT_DOMAIN); ?></th>
 					<td><?php echo esc_html((int) ($result['rows_skipped'] ?? 0)); ?></td>
 				</tr>
 				<tr>
-					<th><?php esc_html_e('SKUs not found in WooCommerce', WDPLP_TEXT_DOMAIN); ?></th>
+					<th><?php esc_html_e('SKUs not found in WooCommerce', WCPL_TEXT_DOMAIN); ?></th>
 					<td>
 						<?php echo esc_html((int) ($result['skus_not_found_count'] ?? 0)); ?>
 						<?php
                             // If there are missing SKUs, show a list of them in parentheses.
                             if ($has_skus_miss) { ?>
-							<span class="wdplp-sku-list">
+							<span class="wcpl-sku-list">
 								<?php // echo esc_html(implode(', ', (array) $result['skus_not_found']));?>
 							</span>
 						<?php } ?>
@@ -76,7 +76,7 @@ $last_limit  = $last_limit  ?? 0;
 				</tr>
 				<?php if (!empty($result['elapsed_seconds'])) { ?>
 				<tr>
-					<th><?php esc_html_e('Duration', WDPLP_TEXT_DOMAIN); ?></th>
+					<th><?php esc_html_e('Duration', WCPL_TEXT_DOMAIN); ?></th>
 					<td><?php echo esc_html(number_format((float) $result['elapsed_seconds'], 2)); ?>s</td>
 				</tr>
 				<?php } ?>
@@ -85,12 +85,12 @@ $last_limit  = $last_limit  ?? 0;
 
 		<?php // Show individual errors/warnings if any.?>
 		<?php if (!empty($result['errors'])) { ?>
-			<details class="wdplp-error-details">
+			<details class="wcpl-error-details">
 				<summary>
 					<?php
                     printf(
                         /* translators: %d: number of errors/warnings */
-                        esc_html__('View %d error/warning message(s)', WDPLP_TEXT_DOMAIN),
+                        esc_html__('View %d error/warning message(s)', WCPL_TEXT_DOMAIN),
                         count((array) $result['errors'])
                     );
 		    ?>
@@ -99,9 +99,9 @@ $last_limit  = $last_limit  ?? 0;
 					<?php foreach ((array) $result['errors'] as $err) { ?>
 						<li>
 							<?php if (!empty($err['row'])) { ?>
-								<strong><?php printf(esc_html__('Row %d:', WDPLP_TEXT_DOMAIN), (int) $err['row']); ?></strong>
+								<strong><?php printf(esc_html__('Row %d:', WCPL_TEXT_DOMAIN), (int) $err['row']); ?></strong>
 							<?php } ?>
-							<span class="wdplp-err-<?php echo esc_attr($err['level'] ?? 'error'); ?>">
+							<span class="wcpl-err-<?php echo esc_attr($err['level'] ?? 'error'); ?>">
 								<?php echo esc_html($err['message'] ?? ''); ?>
 							</span>
 						</li>
@@ -114,9 +114,9 @@ $last_limit  = $last_limit  ?? 0;
 <?php } ?>
 
 <?php // ── Import form ──────────────────────────────────────────────────────?>
-<div class="wdplp-card postbox">
+<div class="wcpl-card postbox">
 	<div class="postbox-header">
-		<h2 class="hndle"><?php esc_html_e('Import Price List CSV', WDPLP_TEXT_DOMAIN); ?></h2>
+		<h2 class="hndle"><?php esc_html_e('Import Price List CSV', WCPL_TEXT_DOMAIN); ?></h2>
 	</div>
 
 	<div class="inside">
@@ -126,73 +126,73 @@ $last_limit  = $last_limit  ?? 0;
 			<?php
 		    esc_html_e(
 		        'Upload a CSV file or provide a URL. The CSV must include a SKU column and a LORDO column. All other columns (e.g. L40, L45, L50N1) are treated as price list codes.',
-		        WDPLP_TEXT_DOMAIN
+		        WCPL_TEXT_DOMAIN
 		    );
 ?>
 		</p>
 		<p class="description">
-			<?php esc_html_e('Example header row:', WDPLP_TEXT_DOMAIN); ?>
+			<?php esc_html_e('Example header row:', WCPL_TEXT_DOMAIN); ?>
 			<code>SKU,LORDO,L40,L45,L50N1</code>
 		</p>
 
 		<hr>
 
 		<form
-			id="wdplp-import-form"
+			id="wcpl-import-form"
 			method="post"
 			action="<?php echo esc_url($action_url); ?>"
 			enctype="multipart/form-data"
 		>
 			<?php // WordPress nonce field for CSRF protection.?>
-			<?php wp_nonce_field('wdplp_import', 'wdplp_import_nonce'); ?>
-			<input type="hidden" name="action" value="wdplp_import">
+			<?php wp_nonce_field('wcpl_import', 'wcpl_import_nonce'); ?>
+			<input type="hidden" name="action" value="wcpl_import">
 
 			<?php // ── Source toggle ───────────────────────────────────────?>
-			<fieldset class="wdplp-source-fieldset">
-				<legend><?php esc_html_e('Import source', WDPLP_TEXT_DOMAIN); ?></legend>
+			<fieldset class="wcpl-source-fieldset">
+				<legend><?php esc_html_e('Import source', WCPL_TEXT_DOMAIN); ?></legend>
 
-				<label class="wdplp-radio-label">
+				<label class="wcpl-radio-label">
 					<input
 						type="radio"
-						name="wdplp_source"
+						name="wcpl_source"
 						value="file"
-						id="wdplp_source_file"
+						id="wcpl_source_file"
 						<?php checked( $last_source, 'file' ); ?>
 					>
-					<?php esc_html_e('Upload a file from your computer', WDPLP_TEXT_DOMAIN); ?>
+					<?php esc_html_e('Upload a file from your computer', WCPL_TEXT_DOMAIN); ?>
 				</label>
 
-				<label class="wdplp-radio-label">
+				<label class="wcpl-radio-label">
 					<input
 						type="radio"
-						name="wdplp_source"
+						name="wcpl_source"
 						value="url"
-						id="wdplp_source_url"
+						id="wcpl_source_url"
 						<?php checked( $last_source, 'url' ); ?>
 					>
-					<?php esc_html_e('Import from a remote URL', WDPLP_TEXT_DOMAIN); ?>
+					<?php esc_html_e('Import from a remote URL', WCPL_TEXT_DOMAIN); ?>
 				</label>
 			</fieldset>
 
 			<?php // ── File upload section ───────────────────────────────?>
-			<div id="wdplp-file-section" class="wdplp-input-section">
+			<div id="wcpl-file-section" class="wcpl-input-section">
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">
-							<label for="wdplp_csv_file">
-								<?php esc_html_e('CSV File', WDPLP_TEXT_DOMAIN); ?>
+							<label for="wcpl_csv_file">
+								<?php esc_html_e('CSV File', WCPL_TEXT_DOMAIN); ?>
 							</label>
 						</th>
 						<td>
 							<input
 								type="file"
-								name="wdplp_csv_file"
-								id="wdplp_csv_file"
+								name="wcpl_csv_file"
+								id="wcpl_csv_file"
 								accept=".csv,.txt,text/csv,text/plain"
-								class="wdplp-file-input"
+								class="wcpl-file-input"
 							>
 							<p class="description">
-								<?php esc_html_e('Accepted formats: .csv, .txt (UTF-8 or Windows-1252 encoding, comma or semicolon delimiter).', WDPLP_TEXT_DOMAIN); ?>
+								<?php esc_html_e('Accepted formats: .csv, .txt (UTF-8 or Windows-1252 encoding, comma or semicolon delimiter).', WCPL_TEXT_DOMAIN); ?>
 							</p>
 						</td>
 					</tr>
@@ -200,25 +200,25 @@ $last_limit  = $last_limit  ?? 0;
 			</div>
 
 			<?php // ── URL section (hidden by default) ─────────────────────?>
-			<div id="wdplp-url-section" class="wdplp-input-section" style="display:none;">
+			<div id="wcpl-url-section" class="wcpl-input-section" style="display:none;">
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">
-							<label for="wdplp_url">
-								<?php esc_html_e('CSV URL', WDPLP_TEXT_DOMAIN); ?>
+							<label for="wcpl_url">
+								<?php esc_html_e('CSV URL', WCPL_TEXT_DOMAIN); ?>
 							</label>
 						</th>
 						<td>
 							<input
 								type="url"
-								name="wdplp_url"
-								id="wdplp_url"
+								name="wcpl_url"
+								id="wcpl_url"
 								class="regular-text"
 								placeholder="https://example.com/prices.csv"
 								value="<?php echo esc_attr( $last_url ); ?>"
 							>
 							<p class="description">
-								<?php esc_html_e('The URL must be publicly accessible. HTTPS is strongly recommended.', WDPLP_TEXT_DOMAIN); ?>
+								<?php esc_html_e('The URL must be publicly accessible. HTTPS is strongly recommended.', WCPL_TEXT_DOMAIN); ?>
 							</p>
 						</td>
 					</tr>
@@ -229,22 +229,22 @@ $last_limit  = $last_limit  ?? 0;
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row">
-						<label for="wdplp_limit_rows">
-							<?php esc_html_e('Row limit', WDPLP_TEXT_DOMAIN); ?>
+						<label for="wcpl_limit_rows">
+							<?php esc_html_e('Row limit', WCPL_TEXT_DOMAIN); ?>
 						</label>
 					</th>
 					<td>
 						<input
 							type="number"
-							name="wdplp_limit_rows"
-							id="wdplp_limit_rows"
+							name="wcpl_limit_rows"
+							id="wcpl_limit_rows"
 							value="<?php echo esc_attr( $last_limit ); ?>"
 							min="0"
 							step="1"
 							class="small-text"
 						>
 						<p class="description">
-							<?php esc_html_e('Maximum number of CSV rows to import (0 = no limit). Useful for testing a portion of a large file.', WDPLP_TEXT_DOMAIN); ?>
+							<?php esc_html_e('Maximum number of CSV rows to import (0 = no limit). Useful for testing a portion of a large file.', WCPL_TEXT_DOMAIN); ?>
 						</p>
 					</td>
 				</tr>
@@ -254,12 +254,12 @@ $last_limit  = $last_limit  ?? 0;
 			<p class="submit">
 				<button
 					type="submit"
-					id="wdplp-import-btn"
+					id="wcpl-import-btn"
 					class="button button-primary button-large"
 				>
-					<?php esc_html_e('Import Price List', WDPLP_TEXT_DOMAIN); ?>
+					<?php esc_html_e('Import Price List', WCPL_TEXT_DOMAIN); ?>
 				</button>
-				<span class="wdplp-spinner spinner" aria-hidden="true"></span>
+				<span class="wcpl-spinner spinner" aria-hidden="true"></span>
 			</p>
 
 		</form>
@@ -268,12 +268,12 @@ $last_limit  = $last_limit  ?? 0;
 </div><!-- .postbox -->
 
 <?php // ── CSV format reference card ────────────────────────────────────────?>
-<div class="wdplp-card postbox">
+<div class="wcpl-card postbox">
 	<div class="postbox-header">
-		<h2 class="hndle"><?php esc_html_e('CSV Format Reference', WDPLP_TEXT_DOMAIN); ?></h2>
+		<h2 class="hndle"><?php esc_html_e('CSV Format Reference', WCPL_TEXT_DOMAIN); ?></h2>
 	</div>
 	<div class="inside">
-		<table class="widefat fixed wdplp-example-table">
+		<table class="widefat fixed wcpl-example-table">
 			<thead>
 				<tr>
 					<th>SKU</th>
@@ -300,18 +300,18 @@ $last_limit  = $last_limit  ?? 0;
 				</tr>
 			</tbody>
 		</table>
-		<ul class="wdplp-legend">
+		<ul class="wcpl-legend">
 			<li>
 				<strong>SKU</strong> —
-				<?php esc_html_e('WooCommerce product SKU. Case-insensitive column header.', WDPLP_TEXT_DOMAIN); ?>
+				<?php esc_html_e('WooCommerce product SKU. Case-insensitive column header.', WCPL_TEXT_DOMAIN); ?>
 			</li>
 			<li>
 				<strong>LORDO</strong> —
-				<?php esc_html_e('Gross price. Updates WooCommerce regular price. Case-insensitive.', WDPLP_TEXT_DOMAIN); ?>
+				<?php esc_html_e('Gross price. Updates WooCommerce regular price. Case-insensitive.', WCPL_TEXT_DOMAIN); ?>
 			</li>
 			<li>
 				<strong>L40, L45, L50N1…</strong> —
-				<?php esc_html_e('Price list codes. Any other column header is stored as a list code. Empty cells are skipped.', WDPLP_TEXT_DOMAIN); ?>
+				<?php esc_html_e('Price list codes. Any other column header is stored as a list code. Empty cells are skipped.', WCPL_TEXT_DOMAIN); ?>
 			</li>
 		</ul>
 	</div>

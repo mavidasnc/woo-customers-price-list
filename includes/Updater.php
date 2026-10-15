@@ -9,20 +9,20 @@
  * Flusso:
  *  1. Interroga l'endpoint /releases/latest dell'API GitHub (con caching in
  *     transient) per scoprire l'ultima versione pubblicata.
- *  2. Se la versione remota è maggiore di WDPLP_VERSION, inietta i dati di
+ *  2. Se la versione remota è maggiore di WCPL_VERSION, inietta i dati di
  *     update nel transient `update_plugins` letto da WordPress.
  *  3. Fornisce il popup "Visualizza dettagli" via il filtro `plugins_api`.
  *  4. Lo zipball auto-generato da GitHub si estrae in una cartella con nome
  *     `owner-repo-<sha>`: `fix_source_dir()` la rinomina nella cartella reale
  *     del plugin prima dell'installazione.
  *
- * Espone l'handler AJAX `wdplp_check_update` usato dalla tab "Aggiornamenti"
+ * Espone l'handler AJAX `wcpl_check_update` usato dalla tab "Aggiornamenti"
  * per forzare il controllo e mostrare lo stato.
  *
- * @package WDPLP
+ * @package WCPL
  */
 
-namespace WDPLP;
+namespace WCPL;
 
 // Prevent direct access to this file.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -40,10 +40,10 @@ class Updater {
 	private const GITHUB_OWNER = 'mavidasnc';
 
 	/** @var string Nome del repository GitHub. */
-	private const GITHUB_REPO = 'woo-dynamic-pricelist-pro';
+	private const GITHUB_REPO = 'woo-customers-price-list';
 
 	/** @var string Chiave del transient che mette in cache la release remota. */
-	private const CACHE_KEY = 'wdplp_github_release';
+	private const CACHE_KEY = 'wcpl_github_release';
 
 	/** @var int Durata della cache in secondi (6 ore). */
 	private const CACHE_TTL = 6 * HOUR_IN_SECONDS;
@@ -62,7 +62,7 @@ class Updater {
 		add_action( 'upgrader_process_complete', [ $this, 'clear_cache_after_update' ], 10, 2 );
 
 		// Controllo manuale dalla tab "Aggiornamenti".
-		add_action( 'wp_ajax_wdplp_check_update', [ $this, 'handle_check_update' ] );
+		add_action( 'wp_ajax_wcpl_check_update', [ $this, 'handle_check_update' ] );
 	}
 
 	// ── Lettura release remota ─────────────────────────────────────────────────
@@ -146,7 +146,7 @@ class Updater {
 		}
 
 		// Aggiorna solo se la versione remota è maggiore di quella installata.
-		if ( ! version_compare( $release['version'], WDPLP_VERSION, '>' ) ) {
+		if ( ! version_compare( $release['version'], WCPL_VERSION, '>' ) ) {
 			return $transient;
 		}
 
@@ -190,7 +190,7 @@ class Updater {
 		}
 
 		$info                = new \stdClass();
-		$info->name          = 'WooCommerce Dynamic Price List Pro';
+		$info->name          = 'Customers Price List for WooCommerce';
 		$info->slug          = $this->get_slug();
 		$info->version       = $release['version'];
 		$info->author        = '<a href="https://mavida.com">Mavida s.n.c.</a>';
@@ -215,7 +215,7 @@ class Updater {
 	 *
 	 * Due scenari gestiti:
 	 *  1. Update automatico — `$hook_extra['plugin']` contiene il nostro basename:
-	 *     rinominiamo nella cartella reale già installata (es. `woo-dynamic-pricelist-pro`).
+	 *     rinominiamo nella cartella reale già installata (es. `woo-customers-price-list`).
 	 *  2. Install manuale via upload zip — `$hook_extra['plugin']` è assente:
 	 *     riconosciamo il pacchetto dalla presenza del file principale e forziamo
 	 *     uno slug stabile, così non si creano cartelle versionate a ogni upload.
@@ -238,18 +238,18 @@ class Updater {
 			if ( $this->get_basename() !== $hook_extra['plugin'] ) {
 				return $source;
 			}
-			// Cartella reale del plugin già installato (es. "woo-dynamic-pricelist-pro").
+			// Cartella reale del plugin già installato (es. "woo-customers-price-list").
 			$desired_slug = dirname( $this->get_basename() );
 		} else {
 			// Scenario 2 — install manuale: nessun basename nel contesto. Riconosciamo
 			// il nostro pacchetto dalla presenza del file principale nella cartella
 			// estratta; in caso negativo non è roba nostra e lasciamo invariato.
-			$main_file = basename( WDPLP_PLUGIN_FILE );
+			$main_file = basename( WCPL_PLUGIN_FILE );
 			if ( ! $wp_filesystem->exists( trailingslashit( $source ) . $main_file ) ) {
 				return $source;
 			}
 			// Slug stabile: evita cartelle versionate a ogni upload manuale.
-			$desired_slug = 'woo-dynamic-pricelist-pro';
+			$desired_slug = 'woo-customers-price-list';
 		}
 
 		$desired_path = trailingslashit( $remote_source ) . $desired_slug;
@@ -265,8 +265,8 @@ class Updater {
 		}
 
 		return new \WP_Error(
-			'wdplp_rename_failed',
-			__( 'Unable to rename the update package folder.', WDPLP_TEXT_DOMAIN )
+			'wcpl_rename_failed',
+			__( 'Unable to rename the update package folder.', WCPL_TEXT_DOMAIN )
 		);
 	}
 
@@ -286,23 +286,23 @@ class Updater {
 	// ── AJAX: controllo manuale ────────────────────────────────────────────────
 
 	/**
-	 * Handler AJAX `wdplp_check_update`: forza il controllo e restituisce lo stato.
+	 * Handler AJAX `wcpl_check_update`: forza il controllo e restituisce lo stato.
 	 *
 	 * @return void
 	 */
 	public function handle_check_update(): void {
-		check_ajax_referer( \WDPLP\Admin\AdminController::NONCE_ACTION, 'nonce' );
+		check_ajax_referer( \WCPL\Admin\AdminController::NONCE_ACTION, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', WDPLP_TEXT_DOMAIN ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', WCPL_TEXT_DOMAIN ) ], 403 );
 		}
 
 		$release = $this->force_check();
-		$current = WDPLP_VERSION;
+		$current = WCPL_VERSION;
 
 		if ( false === $release ) {
 			wp_send_json_error(
-				[ 'message' => __( 'Unable to contact GitHub. Please retry later.', WDPLP_TEXT_DOMAIN ) ]
+				[ 'message' => __( 'Unable to contact GitHub. Please retry later.', WCPL_TEXT_DOMAIN ) ]
 			);
 		}
 
@@ -339,16 +339,16 @@ class Updater {
 	// ── Helpers privati ─────────────────────────────────────────────────────────
 
 	/**
-	 * Basename del plugin (es. "woo-dynamic-pricelist-pro/woo-dynamic-pricelist-pro.php").
+	 * Basename del plugin (es. "woo-customers-price-list/woo-customers-price-list.php").
 	 *
 	 * @return string
 	 */
 	private function get_basename(): string {
-		return plugin_basename( WDPLP_PLUGIN_FILE );
+		return plugin_basename( WCPL_PLUGIN_FILE );
 	}
 
 	/**
-	 * Slug del plugin (cartella, es. "woo-dynamic-pricelist-pro").
+	 * Slug del plugin (cartella, es. "woo-customers-price-list").
 	 *
 	 * @return string
 	 */

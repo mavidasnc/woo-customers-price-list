@@ -3,7 +3,7 @@
  * Import Report Value Object.
  *
  * Accumulates all statistics and error details produced during a single
- * import run. Passed as the argument to the `wdplp_after_import` action
+ * import run. Passed as the argument to the `wcpl_after_import` action
  * and returned to the caller (admin form handler or WP-CLI command).
  *
  * Usage pattern:
@@ -13,11 +13,11 @@
  *   $array = $report->to_array();   // for admin display
  *   $text  = $report->summary();    // for WP-CLI output
  *
- * @package WDPLP\Import
+ * @package WCPL\Import
  * @since   1.0.0
  */
 
-namespace WDPLP\Import;
+namespace WCPL\Import;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {

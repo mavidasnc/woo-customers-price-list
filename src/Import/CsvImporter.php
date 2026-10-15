@@ -17,8 +17,8 @@
  *  11. Fire developer hooks before and after the import.
  *
  * Developer hooks fired:
- *   do_action( 'wdplp_before_import', array $source )   — before parsing.
- *   do_action( 'wdplp_after_import', ImportReport $report ) — after completion.
+ *   do_action( 'wcpl_before_import', array $source )   — before parsing.
+ *   do_action( 'wcpl_after_import', ImportReport $report ) — after completion.
  *
  * CSV parsing notes:
  *   - UTF-8 BOM is stripped automatically from the first cell of the header row.
@@ -27,14 +27,14 @@
  *   - Empty trailing rows are silently skipped.
  *   - Rows with fewer cells than headers are padded with empty strings.
  *
- * @package WDPLP\Import
+ * @package WCPL\Import
  * @since   1.0.0
  */
 
-namespace WDPLP\Import;
+namespace WCPL\Import;
 
-use WDPLP\Helpers;
-use WDPLP\PriceList\Repository;
+use WCPL\Helpers;
+use WCPL\PriceList\Repository;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -196,13 +196,15 @@ class CsvImporter {
 		 * @since 1.0.0
 		 * @param array<string, mixed> $source_info [ 'type' => 'file'|'url', 'source' => string ]
 		 */
-		do_action( 'wdplp_before_import', $source_info );
+		do_action( 'wcpl_before_import', $source_info );
+		// Backward compatibility: the pre-2.0.0 hook name still works, with a deprecation notice.
+		do_action_deprecated( 'wdplp_before_import', [ $source_info ], '2.0.0', 'wcpl_before_import' );
 
 		// ── 1. Validate file ────────────────────────────────────────────────────
 		if ( ! file_exists( $filepath ) || ! is_readable( $filepath ) ) {
 			$report->add_error( sprintf(
 				/* translators: %s: absolute path to the CSV file */
-				__( 'File not found or not readable: "%s".', WDPLP_TEXT_DOMAIN ),
+				__( 'File not found or not readable: "%s".', WCPL_TEXT_DOMAIN ),
 				$filepath
 			) );
 			$report->finish();
@@ -281,7 +283,9 @@ class CsvImporter {
 		 * @since 1.0.0
 		 * @param ImportReport $report The completed import report.
 		 */
-		do_action( 'wdplp_after_import', $report );
+		do_action( 'wcpl_after_import', $report );
+		// Backward compatibility: the pre-2.0.0 hook name still works, with a deprecation notice.
+		do_action_deprecated( 'wdplp_after_import', [ $report ], '2.0.0', 'wcpl_after_import' );
 
 		return $report;
 	}
@@ -355,7 +359,7 @@ class CsvImporter {
 		if ( false === $handle ) {
 			$report->add_error( sprintf(
 				/* translators: %s: absolute path to the CSV file */
-				__( 'Could not open CSV file: "%s".', WDPLP_TEXT_DOMAIN ),
+				__( 'Could not open CSV file: "%s".', WCPL_TEXT_DOMAIN ),
 				$filepath
 			) );
 			return [ [], [] ];
@@ -365,7 +369,7 @@ class CsvImporter {
 		$first_line = fgets( $handle );
 		if ( false === $first_line ) {
 			fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
-			$report->add_error( __( 'CSV file appears to be empty.', WDPLP_TEXT_DOMAIN ) );
+			$report->add_error( __( 'CSV file appears to be empty.', WCPL_TEXT_DOMAIN ) );
 			return [ [], [] ];
 		}
 
@@ -378,7 +382,7 @@ class CsvImporter {
 		$headers = fgetcsv( $handle, self::CSV_MAX_LINE_LENGTH, $delimiter );
 		if ( false === $headers || empty( $headers ) ) {
 			fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
-			$report->add_error( __( 'CSV file has no header row.', WDPLP_TEXT_DOMAIN ) );
+			$report->add_error( __( 'CSV file has no header row.', WCPL_TEXT_DOMAIN ) );
 			return [ [], [] ];
 		}
 

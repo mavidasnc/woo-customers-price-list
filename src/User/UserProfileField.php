@@ -22,13 +22,13 @@
  *   - Capability : current_user_can( 'edit_user', $user_id ) before saving.
  *   - Sanitise   : sanitize_text_field() + validation against the allowed cod list.
  *
- * @package WDPLP\User
+ * @package WCPL\User
  * @since   1.0.0
  */
 
-namespace WDPLP\User;
+namespace WCPL\User;
 
-use WDPLP\PriceList\Repository;
+use WCPL\PriceList\Repository;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -53,7 +53,7 @@ class UserProfileField {
 	 *
 	 * @var string
 	 */
-	private const FIELD_NAME = 'wdplp_assigned_price_list';
+	private const FIELD_NAME = 'wcpl_assigned_price_list';
 
 	// ---------------------------------------------------------------------------
 	// Hooks
@@ -108,13 +108,13 @@ class UserProfileField {
 		$is_stale = '' !== $current_cod && ! in_array( $current_cod, $cod_values, true );
 
 		?>
-		<h2><?php esc_html_e( 'Price List Settings', WDPLP_TEXT_DOMAIN ); ?></h2>
+		<h2><?php esc_html_e( 'Price List Settings', WCPL_TEXT_DOMAIN ); ?></h2>
 
 		<table class="form-table" role="presentation">
 			<tr>
 				<th scope="row">
 					<label for="<?php echo esc_attr( self::FIELD_NAME ); ?>">
-						<?php esc_html_e( 'Assigned Price List', WDPLP_TEXT_DOMAIN ); ?>
+						<?php esc_html_e( 'Assigned Price List', WCPL_TEXT_DOMAIN ); ?>
 					</label>
 				</th>
 				<td>
@@ -127,10 +127,10 @@ class UserProfileField {
 							printf(
 								wp_kses(
 									/* translators: %s: link to the Price Lists admin page */
-									__( 'No price lists found. <a href="%s">Import a CSV</a> to populate the list.', WDPLP_TEXT_DOMAIN ),
+									__( 'No price lists found. <a href="%s">Import a CSV</a> to populate the list.', WCPL_TEXT_DOMAIN ),
 									[ 'a' => [ 'href' => [] ] ]
 								),
-								esc_url( admin_url( 'admin.php?page=wdplp-import&tab=import' ) )
+								esc_url( admin_url( 'admin.php?page=wcpl-import&tab=import' ) )
 							);
 							?>
 						</p>
@@ -143,7 +143,7 @@ class UserProfileField {
 						>
 							<?php // "No assignment" option. ?>
 							<option value="">
-								— <?php esc_html_e( 'No price list assigned', WDPLP_TEXT_DOMAIN ); ?> —
+								— <?php esc_html_e( 'No price list assigned', WCPL_TEXT_DOMAIN ); ?> —
 							</option>
 
 							<?php foreach ( $cod_values as $cod ) : ?>
@@ -161,7 +161,7 @@ class UserProfileField {
 							<?php
 							esc_html_e(
 								'Determines which price list prices are shown to this user on the frontend.',
-								WDPLP_TEXT_DOMAIN
+								WCPL_TEXT_DOMAIN
 							);
 							?>
 						</p>
@@ -173,7 +173,7 @@ class UserProfileField {
 								<?php
 								printf(
 									/* translators: %s: the stale cod value stored in user meta */
-									esc_html__( 'The previously assigned list "%s" is no longer active. Please re-assign or select "No price list assigned" to clear it.', WDPLP_TEXT_DOMAIN ),
+									esc_html__( 'The previously assigned list "%s" is no longer active. Please re-assign or select "No price list assigned" to clear it.', WCPL_TEXT_DOMAIN ),
 									esc_html( $current_cod )
 								);
 								?>

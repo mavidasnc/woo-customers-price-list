@@ -9,19 +9,19 @@
  *   - Renders the "Logs & History" tab content (called by AdminController).
  *
  * Security:
- *   - Only lists files within WDPLP_LOG_DIR (never arbitrary paths).
+ *   - Only lists files within WCPL_LOG_DIR (never arbitrary paths).
  *   - The requested log filename is validated against the directory listing
  *     before reading (prevents path traversal: ../../etc/passwd etc.).
  *   - Log file content is escaped with esc_html() before output.
  *
- * @package WDPLP\Admin
+ * @package WCPL\Admin
  * @since   1.0.0
  */
 
-namespace WDPLP\Admin;
+namespace WCPL\Admin;
 
-use WDPLP\Helpers;
-use WDPLP\PriceList\Repository;
+use WCPL\Helpers;
+use WCPL\PriceList\Repository;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -44,8 +44,8 @@ class LogsPage {
 	/**
 	 * Nonce action and POST action name for log file download requests.
 	 */
-	private const DOWNLOAD_NONCE_ACTION = 'wdplp_download_log';
-	private const DOWNLOAD_POST_ACTION  = 'wdplp_download_log';
+	private const DOWNLOAD_NONCE_ACTION = 'wcpl_download_log';
+	private const DOWNLOAD_POST_ACTION  = 'wcpl_download_log';
 
 	// ---------------------------------------------------------------------------
 	// Hooks
@@ -67,7 +67,7 @@ class LogsPage {
 	/**
 	 * Serve a log file as a plain-text download attachment.
 	 *
-	 * Hooked to admin_post_wdplp_download_log (authenticated users only;
+	 * Hooked to admin_post_wcpl_download_log (authenticated users only;
 	 * unauthenticated GET attempts are never mapped to this action).
 	 *
 	 * Security chain:
@@ -80,12 +80,12 @@ class LogsPage {
 	 */
 	public function handle_download(): void {
 		// ── Security: nonce + capability ──────────────────────────────────────
-		check_admin_referer( self::DOWNLOAD_NONCE_ACTION, 'wdplp_download_nonce' );
+		check_admin_referer( self::DOWNLOAD_NONCE_ACTION, 'wcpl_download_nonce' );
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die(
-				esc_html__( 'You do not have permission to perform this action.', WDPLP_TEXT_DOMAIN ),
-				esc_html__( 'Permission Denied', WDPLP_TEXT_DOMAIN ),
+				esc_html__( 'You do not have permission to perform this action.', WCPL_TEXT_DOMAIN ),
+				esc_html__( 'Permission Denied', WCPL_TEXT_DOMAIN ),
 				[ 'response' => 403 ]
 			);
 		}
@@ -97,8 +97,8 @@ class LogsPage {
 
 		if ( ! preg_match( '/^wc-price-log-\d{4}-\d{2}-\d{2}\.log$/', $filename ) ) {
 			wp_die(
-				esc_html__( 'Invalid log file name.', WDPLP_TEXT_DOMAIN ),
-				esc_html__( 'Error', WDPLP_TEXT_DOMAIN ),
+				esc_html__( 'Invalid log file name.', WCPL_TEXT_DOMAIN ),
+				esc_html__( 'Error', WCPL_TEXT_DOMAIN ),
 				[ 'response' => 400 ]
 			);
 		}
@@ -115,8 +115,8 @@ class LogsPage {
 			! is_readable( $real_path )
 		) {
 			wp_die(
-				esc_html__( 'Log file not found or not readable.', WDPLP_TEXT_DOMAIN ),
-				esc_html__( 'Error', WDPLP_TEXT_DOMAIN ),
+				esc_html__( 'Log file not found or not readable.', WCPL_TEXT_DOMAIN ),
+				esc_html__( 'Error', WCPL_TEXT_DOMAIN ),
 				[ 'response' => 404 ]
 			);
 		}
@@ -179,7 +179,7 @@ class LogsPage {
 		}
 
 		// ── 5. Render the template ─────────────────────────────────────────────
-		require WDPLP_PLUGIN_DIR . 'admin/views/logs-page.php';
+		require WCPL_PLUGIN_DIR . 'admin/views/logs-page.php';
 	}
 
 	// ---------------------------------------------------------------------------
@@ -220,7 +220,7 @@ class LogsPage {
 	/**
 	 * Read and return the content of a log file as a string.
 	 *
-	 * Only reads from within WDPLP_LOG_DIR. The filename is validated against
+	 * Only reads from within WCPL_LOG_DIR. The filename is validated against
 	 * the directory listing before use (path traversal prevention).
 	 *
 	 * Limits output to the last MAX_LOG_LINES lines of the file to prevent

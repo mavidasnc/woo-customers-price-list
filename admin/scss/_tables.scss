@@ -2,14 +2,14 @@
 // Tables — CSV example reference, import history, data (price list viewer)
 //          and empty states
 //
-// @package WDPLP
+// @package WCPL
 // @since   1.3.0
 // =============================================================================
 
 @use 'variables' as v;
 
 // ── CSV Example Table (reference card) ───────────────────────────────────────
-.wdplp-example-table {
+.wcpl-example-table {
   max-width: 600px;
   margin-bottom: v.$spacing-md;
 
@@ -26,7 +26,7 @@
   }
 }
 
-.wdplp-legend {
+.wcpl-legend {
   list-style: disc;
   margin-left: v.$spacing-xl;
   font-size: v.$font-size-base;
@@ -38,7 +38,7 @@
 }
 
 // ── Import History Table ──────────────────────────────────────────────────────
-.wdplp-history-table {
+.wcpl-history-table {
   th.num,
   td.num {
     text-align: right;
@@ -47,24 +47,24 @@
 }
 
 // ── Empty States ──────────────────────────────────────────────────────────────
-.wdplp-empty-state,
-.wdplp-no-data {
+.wcpl-empty-state,
+.wcpl-no-data {
   color: v.$color-wp-gray;
   font-style: italic;
   margin: 10px 0;
 }
 
 // ── Data Table (Price List Viewer) ────────────────────────────────────────────
-.wdplp-data-table {
+.wcpl-data-table {
   margin-top: v.$spacing-md;
 
-  .wdplp-col-id      { width: 60px; }
-  .wdplp-col-sku     { width: 180px; }
-  .wdplp-col-cod     { width: 120px; }
-  .wdplp-col-price   { width: 100px; text-align: right; }
-  .wdplp-col-date    { width: 110px; }
+  .wcpl-col-id      { width: 60px; }
+  .wcpl-col-sku     { width: 180px; }
+  .wcpl-col-cod     { width: 120px; }
+  .wcpl-col-price   { width: 100px; text-align: right; }
+  .wcpl-col-date    { width: 110px; }
 
-  .wdplp-col-created {
+  .wcpl-col-created {
     width: 160px;
     color: v.$color-wp-gray;
     font-size: v.$font-size-sm;

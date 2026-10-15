@@ -1,19 +1,19 @@
 // =============================================================================
 // Layout — Page wrapper and tab navigation
 //
-// @package WDPLP
+// @package WCPL
 // @since   1.3.0
 // =============================================================================
 
 @use 'variables' as v;
 
-.wdplp-wrap {
+.wcpl-wrap {
   .nav-tab-wrapper {
     margin-bottom: 0;
     border-bottom: 1px solid v.$color-wp-border;
   }
 }
 
-.wdplp-tab-content {
+.wcpl-tab-content {
   padding-top: v.$spacing-xl;
 }

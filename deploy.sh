@@ -42,7 +42,7 @@ source "$ENV_FILE"
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 # The remote plugin directory is: $FTP_REMOTE_PATH/<plugin-slug>/
-PLUGIN_SLUG="woo-dynamic-pricelist-pro"
+PLUGIN_SLUG="woo-customers-price-list"
 LOCAL_DIR="$SCRIPT_DIR"
 REMOTE_DIR="$FTP_REMOTE_PATH/$PLUGIN_SLUG"
 
@@ -62,7 +62,7 @@ done
 
 # ── Banner ────────────────────────────────────────────────────────────────────
 echo "========================================================"
-echo " WooCommerce Dynamic Price List Pro — FTP Deploy"
+echo " Customers Price List for WooCommerce — FTP Deploy"
 echo "========================================================"
 echo " Host   : $FTP_HOST:$FTP_PORT"
 echo " Remote : $REMOTE_DIR"

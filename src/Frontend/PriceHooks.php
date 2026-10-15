@@ -27,7 +27,7 @@
  *
  * Design notes:
  *   - All price calculations are delegated to PriceResolver, which handles
- *     the DB lookup and the `wdplp_final_price` developer filter.
+ *     the DB lookup and the `wcpl_final_price` developer filter.
  *   - A single PriceResolver instance is shared across all hook calls in this
  *     request, so its in-memory cache is reused (avoids duplicate DB queries).
  *   - woocommerce_get_price_html is used (not woocommerce_get_price) because
@@ -35,13 +35,13 @@
  *     currency symbol, and sale price display. This is the correct hook to use
  *     when you want to replace the full price string shown to the customer.
  *
- * @package WDPLP\Frontend
+ * @package WCPL\Frontend
  * @since   1.0.0
  */
 
-namespace WDPLP\Frontend;
+namespace WCPL\Frontend;
 
-use WDPLP\PriceList\PriceResolver;
+use WCPL\PriceList\PriceResolver;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -97,7 +97,7 @@ class PriceHooks {
 	 *
 	 * Guest behaviour:
 	 *   Returns a "login to see prices" message (translatable, filterable).
-	 *   The message is wrapped in a <span class="wdplp-login-prompt"> for styling.
+	 *   The message is wrapped in a <span class="wcpl-login-prompt"> for styling.
 	 *
 	 * Logged-in user behaviour:
 	 *   - Attempts to resolve a list price via PriceResolver.
@@ -247,7 +247,7 @@ class PriceHooks {
 		$message = sprintf(
 			'<a href="%s">%s</a>',
 			esc_url( $login_url ),
-			esc_html__( 'Login to see prices', WDPLP_TEXT_DOMAIN )
+			esc_html__( 'Login to see prices', WCPL_TEXT_DOMAIN )
 		);
 
 		/**
@@ -257,10 +257,13 @@ class PriceHooks {
 		 * @param string $message   The default HTML message with login link.
 		 * @param string $login_url The URL of the login page with a redirect back.
 		 */
-		$message = (string) apply_filters( 'wdplp_login_prompt_html', $message, $login_url );
+		$message = (string) apply_filters( 'wcpl_login_prompt_html', $message, $login_url );
+
+		// Backward compatibility: the pre-2.0.0 hook name still works, with a deprecation notice.
+		$message = (string) apply_filters_deprecated( 'wdplp_login_prompt_html', [ $message, $login_url ], '2.0.0', 'wcpl_login_prompt_html' );
 
 		return sprintf(
-			'<span class="wdplp-login-prompt">%s</span>',
+			'<span class="wcpl-login-prompt">%s</span>',
 			wp_kses(
 				$message,
 				[

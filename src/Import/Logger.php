@@ -17,13 +17,13 @@
  * Log files accumulate indefinitely; there is currently no automatic rotation.
  * The directory is protected by .htaccess (written by Helpers::ensure_log_dir()).
  *
- * @package WDPLP\Import
+ * @package WCPL\Import
  * @since   1.0.0
  */
 
-namespace WDPLP\Import;
+namespace WCPL\Import;
 
-use WDPLP\Helpers;
+use WCPL\Helpers;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {

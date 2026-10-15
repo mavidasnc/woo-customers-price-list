@@ -13,11 +13,11 @@
  *   - All sanitisation methods wrap WordPress core functions to centralise
  *     the sanitisation strategy and make future changes easy.
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.0.0
  */
 
-namespace WDPLP;
+namespace WCPL;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -147,7 +147,7 @@ final class Helpers {
 	 * @return string Absolute path with trailing slash.
 	 */
 	public static function get_log_dir(): string {
-		return WDPLP_LOG_DIR;
+		return WCPL_LOG_DIR;
 	}
 
 	/**
@@ -180,7 +180,7 @@ final class Helpers {
 		if ( ! file_exists( $htaccess_path ) ) {
 			file_put_contents( // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 				$htaccess_path,
-				"# Managed by WooCommerce Dynamic Price List Pro — do not delete.\n"
+				"# Managed by Customers Price List for WooCommerce — do not delete.\n"
 				. "Order allow,deny\n"
 				. "Deny from all\n"
 			);

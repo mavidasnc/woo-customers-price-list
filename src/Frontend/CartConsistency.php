@@ -30,13 +30,13 @@
  *   - Guest users are skipped entirely (they have no price list and cannot
  *     add to cart in the first place, thanks to PriceHooks).
  *
- * @package WDPLP\Frontend
+ * @package WCPL\Frontend
  * @since   1.0.0
  */
 
-namespace WDPLP\Frontend;
+namespace WCPL\Frontend;
 
-use WDPLP\PriceList\PriceResolver;
+use WCPL\PriceList\PriceResolver;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {

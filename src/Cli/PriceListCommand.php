@@ -27,15 +27,15 @@
  *   wp price-list import --file=/tmp/prices.csv --dry-run
  *   wp price-list status
  *
- * @package WDPLP\Cli
+ * @package WCPL\Cli
  * @since   1.0.0
  */
 
-namespace WDPLP\Cli;
+namespace WCPL\Cli;
 
-use WDPLP\Import\CsvImporter;
-use WDPLP\Import\ImportReport;
-use WDPLP\PriceList\Repository;
+use WCPL\Import\CsvImporter;
+use WCPL\Import\ImportReport;
+use WCPL\PriceList\Repository;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -43,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Manage WooCommerce Dynamic Price List Pro data.
+ * Manage Customers Price List for WooCommerce data.
  *
  * ## EXAMPLES
  *

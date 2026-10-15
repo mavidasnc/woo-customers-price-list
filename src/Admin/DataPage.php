@@ -16,13 +16,13 @@
  *   - No write operations; capability check inherited from AdminController
  *     (page requires `manage_woocommerce`).
  *
- * @package WDPLP\Admin
+ * @package WCPL\Admin
  * @since   1.0.0
  */
 
-namespace WDPLP\Admin;
+namespace WCPL\Admin;
 
-use WDPLP\PriceList\Repository;
+use WCPL\PriceList\Repository;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -81,6 +81,6 @@ class DataPage {
 		$per_page    = self::PER_PAGE;
 		$base_url    = AdminController::get_page_url( 'data' );
 
-		require WDPLP_PLUGIN_DIR . 'admin/views/data-page.php';
+		require WCPL_PLUGIN_DIR . 'admin/views/data-page.php';
 	}
 }

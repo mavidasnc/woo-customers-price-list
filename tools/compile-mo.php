@@ -3,7 +3,7 @@
  * Standalone .po → .mo compiler.
  *
  * Usage (from plugin root):
- *   php tools/compile-mo.php languages/woo-dynamic-pricelist-pro-it_IT.po
+ *   php tools/compile-mo.php languages/woo-customers-price-list-it_IT.po
  *
  * Compiles the given .po file into a .mo binary file (same basename, same dir).
  * The output file is suitable for use with load_plugin_textdomain().
@@ -11,7 +11,7 @@
  * Format specification:
  *   https://www.gnu.org/software/gettext/manual/html_node/MO-Files.html
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.0.0
  */
 

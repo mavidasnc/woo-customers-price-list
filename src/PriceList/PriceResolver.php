@@ -7,7 +7,7 @@
  *
  *   1. Read the user's assigned price list code from user meta.
  *   2. Query the custom_price_lists table for a matching (sku, cod) price.
- *   3. Apply the `wdplp_final_price` filter so developers can add markups,
+ *   3. Apply the `wcpl_final_price` filter so developers can add markups,
  *      discounts, or any further pricing logic.
  *   4. Fall back to null if no custom price exists (caller uses WC default).
  *
@@ -21,17 +21,17 @@
  *   duplicate DB queries.
  *
  * Developer filter:
- *   apply_filters( 'wdplp_final_price', float $price, string $sku, int $user_id, string $cod )
+ *   apply_filters( 'wcpl_final_price', float $price, string $sku, int $user_id, string $cod )
  *   — Allows external code to modify the resolved price before it is used.
  *   — Return null to fall back to the WooCommerce default price.
  *
- * @package WDPLP\PriceList
+ * @package WCPL\PriceList
  * @since   1.0.0
  */
 
-namespace WDPLP\PriceList;
+namespace WCPL\PriceList;
 
-use WDPLP\User\UserProfileField;
+use WCPL\User\UserProfileField;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -84,7 +84,7 @@ class PriceResolver {
 	 * Resolution algorithm:
 	 *   1. User must be logged in with an assigned price list (cod).
 	 *   2. Look up (sku, cod) in the database.
-	 *   3. Apply the `wdplp_final_price` filter.
+	 *   3. Apply the `wcpl_final_price` filter.
 	 *   4. Return the resolved price, or null to signal "use WC default".
 	 *
 	 * @param int    $user_id    WordPress user ID.
@@ -135,7 +135,10 @@ class PriceResolver {
 		 * @param int    $user_id The WordPress user ID.
 		 * @param string $cod     The price list code assigned to the user.
 		 */
-		$filtered_price = apply_filters( 'wdplp_final_price', $db_price, $sku, $user_id, $cod );
+		$filtered_price = apply_filters( 'wcpl_final_price', $db_price, $sku, $user_id, $cod );
+
+		// Backward compatibility: the pre-2.0.0 hook name still works, with a deprecation notice.
+		$filtered_price = apply_filters_deprecated( 'wdplp_final_price', [ $filtered_price, $sku, $user_id, $cod ], '2.0.0', 'wcpl_final_price' );
 
 		// Normalise: accept float or null from filter; discard other types.
 		$resolved = is_numeric( $filtered_price ) ? (float) $filtered_price : null;

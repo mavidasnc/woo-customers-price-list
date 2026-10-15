@@ -16,11 +16,11 @@
  *   - Clear any scheduled WP-Cron events registered by this plugin.
  *   - Flush rewrite rules (clean up any rules we may have added).
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.0.0
  */
 
-namespace WDPLP;
+namespace WCPL;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class Deactivator
  *
  * Registered as the deactivation callback in the main plugin file:
- *   register_deactivation_hook( WDPLP_PLUGIN_FILE, [ WDPLP\Deactivator::class, 'deactivate' ] );
+ *   register_deactivation_hook( WCPL_PLUGIN_FILE, [ WCPL\Deactivator::class, 'deactivate' ] );
  */
 final class Deactivator {
 
@@ -45,7 +45,7 @@ final class Deactivator {
 	 */
 	public static function deactivate(): void {
 		// Unschedule any WP-Cron events this plugin may register in the future.
-		// Pattern: wp_clear_scheduled_hook( 'wdplp_scheduled_event_name' );
+		// Pattern: wp_clear_scheduled_hook( 'wcpl_scheduled_event_name' );
 
 		// Flush rewrite rules to remove any custom rules this plugin may add.
 		flush_rewrite_rules();

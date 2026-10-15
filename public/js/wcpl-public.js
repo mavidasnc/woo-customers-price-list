@@ -1,13 +1,13 @@
 /**
- * WooCommerce Dynamic Price List Pro — Frontend Script
+ * Customers Price List for WooCommerce — Frontend Script
  *
  * Initialises Select2 on every <select> inside the WooCommerce sidebar
  * (#sidebar) that has not already been enhanced by another script.
  *
  * Dependencies (declared via wp_enqueue_script):
- *   jquery, wdplp-select2, wdplp-select2-i18n-it
+ *   jquery, wcpl-select2, wcpl-select2-i18n-it
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.3.3
  */
 

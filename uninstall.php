@@ -13,7 +13,7 @@
  * this file. We verify its presence as a mandatory security gate; direct
  * HTTP requests to this file will exit immediately without taking any action.
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.0.0
  */
 
@@ -37,8 +37,9 @@ $wpdb->query( "DROP TABLE IF EXISTS `{$table_name}`" ); // @phpstan-ignore-line
 // ---------------------------------------------------------------------------
 // 2. Delete plugin options.
 // ---------------------------------------------------------------------------
-delete_option( 'wdplp_version' );
-delete_option( 'wdplp_settings' );
+delete_option( 'wcpl_version' );
+delete_option( 'wdplp_version' ); // Pre-2.0.0 name.
+delete_option( 'wcpl_settings' );
 
 // ---------------------------------------------------------------------------
 // 3. Remove user meta for all users.
@@ -55,8 +56,8 @@ $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 // ---------------------------------------------------------------------------
 // 4. Delete transients (if any are introduced in future versions).
 // ---------------------------------------------------------------------------
-// Pattern: delete_transient( 'wdplp_some_transient' );
-// Site transients: delete_site_transient( 'wdplp_some_transient' );
+// Pattern: delete_transient( 'wcpl_some_transient' );
+// Site transients: delete_site_transient( 'wcpl_some_transient' );
 
 // ---------------------------------------------------------------------------
 // NOTE: Log files in wp-content/uploads/wc-price-logs/ are intentionally

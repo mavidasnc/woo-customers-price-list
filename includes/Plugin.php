@@ -12,11 +12,11 @@
  *   - Guards each component instantiation with class_exists() so the plugin
  *     loads without fatal errors during Step 1, before src/ classes exist.
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.0.0
  */
 
-namespace WDPLP;
+namespace WCPL;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * `plugins_loaded` hook (priority 11) and stored in a private static property.
  *
  * Usage (already wired up in the bootstrap file):
- *   add_action( 'plugins_loaded', [ WDPLP\Plugin::class, 'get_instance' ], 11 );
+ *   add_action( 'plugins_loaded', [ WCPL\Plugin::class, 'get_instance' ], 11 );
  */
 final class Plugin {
 
@@ -97,6 +97,14 @@ final class Plugin {
 	 * @return void
 	 */
 	private function initialize(): void {
+		// Guard: the pre-2.0.0 plugin (woo-dynamic-pricelist-pro) is still active.
+		// Both would filter the same prices and register the same WP-CLI command,
+		// so this plugin stays idle until the old one is deactivated.
+		if ( defined( 'WDPLP_VERSION' ) ) {
+			add_action( 'admin_notices', [ $this, 'notice_legacy_plugin_active' ] );
+			return;
+		}
+
 		// Guard: WooCommerce must be active.
 		if ( ! $this->is_woocommerce_active() ) {
 			add_action( 'admin_notices', [ $this, 'notice_woocommerce_missing' ] );
@@ -113,8 +121,8 @@ final class Plugin {
 		add_action( 'init', [ $this, 'load_textdomain' ] );
 
 		// Updater: registrato fuori da is_admin() — il cron WP non è in contesto admin.
-		if ( class_exists( \WDPLP\Updater::class ) ) {
-			( new \WDPLP\Updater() )->register_hooks();
+		if ( class_exists( \WCPL\Updater::class ) ) {
+			( new \WCPL\Updater() )->register_hooks();
 		}
 
 		// Context-based subsystem initialisation.
@@ -150,12 +158,12 @@ final class Plugin {
 	 * Check whether the active WooCommerce version meets our minimum requirement.
 	 *
 	 * WC_VERSION is defined by WooCommerce itself; we compare it against the
-	 * WDPLP_MIN_WC constant defined in the bootstrap file.
+	 * WCPL_MIN_WC constant defined in the bootstrap file.
 	 *
 	 * @return bool True if WooCommerce meets or exceeds the required version.
 	 */
 	private function is_woocommerce_version_compatible(): bool {
-		return defined( 'WC_VERSION' ) && version_compare( WC_VERSION, WDPLP_MIN_WC, '>=' );
+		return defined( 'WC_VERSION' ) && version_compare( WC_VERSION, WCPL_MIN_WC, '>=' );
 	}
 
 	// ---------------------------------------------------------------------------
@@ -172,9 +180,9 @@ final class Plugin {
 	 */
 	public function load_textdomain(): void {
 		load_plugin_textdomain(
-			WDPLP_TEXT_DOMAIN,
+			WCPL_TEXT_DOMAIN,
 			false,
-			dirname( plugin_basename( WDPLP_PLUGIN_FILE ) ) . '/languages/'
+			dirname( plugin_basename( WCPL_PLUGIN_FILE ) ) . '/languages/'
 		);
 	}
 
@@ -193,23 +201,23 @@ final class Plugin {
 	 */
 	private function register_admin_hooks(): void {
 		// Main admin menu and asset enqueueing.
-		if ( class_exists( \WDPLP\Admin\AdminController::class ) ) {
-			( new \WDPLP\Admin\AdminController() )->register_hooks();
+		if ( class_exists( \WCPL\Admin\AdminController::class ) ) {
+			( new \WCPL\Admin\AdminController() )->register_hooks();
 		}
 
 		// Import form handler (POST action + admin notice feedback).
-		if ( class_exists( \WDPLP\Admin\ImportPage::class ) ) {
-			( new \WDPLP\Admin\ImportPage() )->register_hooks();
+		if ( class_exists( \WCPL\Admin\ImportPage::class ) ) {
+			( new \WCPL\Admin\ImportPage() )->register_hooks();
 		}
 
 		// Log file download handler (GET action via admin-post.php).
-		if ( class_exists( \WDPLP\Admin\LogsPage::class ) ) {
-			( new \WDPLP\Admin\LogsPage() )->register_hooks();
+		if ( class_exists( \WCPL\Admin\LogsPage::class ) ) {
+			( new \WCPL\Admin\LogsPage() )->register_hooks();
 		}
 
 		// "Assigned Price List" dropdown on user profile pages.
-		if ( class_exists( \WDPLP\User\UserProfileField::class ) ) {
-			( new \WDPLP\User\UserProfileField() )->register_hooks();
+		if ( class_exists( \WCPL\User\UserProfileField::class ) ) {
+			( new \WCPL\User\UserProfileField() )->register_hooks();
 		}
 	}
 
@@ -222,18 +230,18 @@ final class Plugin {
 	 */
 	private function register_frontend_hooks(): void {
 		// Public stylesheet (WooCommerce pages only).
-		if ( class_exists( \WDPLP\Frontend\FrontendAssets::class ) ) {
-			( new \WDPLP\Frontend\FrontendAssets() )->register_hooks();
+		if ( class_exists( \WCPL\Frontend\FrontendAssets::class ) ) {
+			( new \WCPL\Frontend\FrontendAssets() )->register_hooks();
 		}
 
 		// Price display: hides prices for guests, applies list price for users.
-		if ( class_exists( \WDPLP\Frontend\PriceHooks::class ) ) {
-			( new \WDPLP\Frontend\PriceHooks() )->register_hooks();
+		if ( class_exists( \WCPL\Frontend\PriceHooks::class ) ) {
+			( new \WCPL\Frontend\PriceHooks() )->register_hooks();
 		}
 
 		// Cart consistency: re-applies list price before totals are calculated.
-		if ( class_exists( \WDPLP\Frontend\CartConsistency::class ) ) {
-			( new \WDPLP\Frontend\CartConsistency() )->register_hooks();
+		if ( class_exists( \WCPL\Frontend\CartConsistency::class ) ) {
+			( new \WCPL\Frontend\CartConsistency() )->register_hooks();
 		}
 	}
 
@@ -247,14 +255,33 @@ final class Plugin {
 	 * @return void
 	 */
 	private function register_cli_commands(): void {
-		if ( class_exists( \WDPLP\Cli\PriceListCommand::class ) ) {
-			\WP_CLI::add_command( 'price-list', new \WDPLP\Cli\PriceListCommand() );
+		if ( class_exists( \WCPL\Cli\PriceListCommand::class ) ) {
+			\WP_CLI::add_command( 'price-list', new \WCPL\Cli\PriceListCommand() );
 		}
 	}
 
 	// ---------------------------------------------------------------------------
 	// Admin Notices
 	// ---------------------------------------------------------------------------
+
+	/**
+	 * Admin notice shown while the pre-2.0.0 plugin is still active.
+	 *
+	 * Tells the administrator to deactivate it and to remove its folder via
+	 * FTP/SSH: deleting it from wp-admin runs its uninstall.php, which drops
+	 * the shared price list table and the assigned list user meta.
+	 *
+	 * @return void
+	 */
+	public function notice_legacy_plugin_active(): void {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+		printf(
+			'<div class="notice notice-warning"><p>%s</p></div>',
+			esc_html__( 'Customers Price List for WooCommerce is idle because the old "WooCommerce Dynamic Price List Pro" plugin is still active. Deactivate the old plugin and remove its folder via FTP or SSH: do not delete it from the Plugins screen, because its uninstall routine erases the price lists and the customer assignments.', WCPL_TEXT_DOMAIN )
+		);
+	}
 
 	/**
 	 * Display an admin notice when WooCommerce is not installed or active.
@@ -269,7 +296,7 @@ final class Plugin {
 			wp_kses(
 				sprintf(
 					/* translators: %s: WooCommerce plugin name in bold */
-					__( '<strong>WooCommerce Dynamic Price List Pro</strong> requires %s to be installed and active.', WDPLP_TEXT_DOMAIN ),
+					__( '<strong>Customers Price List for WooCommerce</strong> requires %s to be installed and active.', WCPL_TEXT_DOMAIN ),
 					'<strong>WooCommerce</strong>'
 				),
 				[ 'strong' => [] ]
@@ -291,10 +318,10 @@ final class Plugin {
 			esc_html(
 				sprintf(
 					/* translators: 1: Plugin name, 2: Required WC version, 3: Installed WC version */
-					__( '%1$s requires WooCommerce %2$s or higher. You are running WooCommerce %3$s.', WDPLP_TEXT_DOMAIN ),
-					'WooCommerce Dynamic Price List Pro',
-					WDPLP_MIN_WC,
-					defined( 'WC_VERSION' ) ? WC_VERSION : __( 'unknown', WDPLP_TEXT_DOMAIN )
+					__( '%1$s requires WooCommerce %2$s or higher. You are running WooCommerce %3$s.', WCPL_TEXT_DOMAIN ),
+					'Customers Price List for WooCommerce',
+					WCPL_MIN_WC,
+					defined( 'WC_VERSION' ) ? WC_VERSION : __( 'unknown', WCPL_TEXT_DOMAIN )
 				)
 			)
 		);

@@ -1,24 +1,24 @@
 <?php
 /**
- * PSR-4-style Autoloader for the WDPLP namespace.
+ * PSR-4-style Autoloader for the WCPL namespace.
  *
  * This class is intentionally free of any WordPress dependencies so that
  * it can be safely required and registered before anything else in the
  * bootstrap file, even before the wp_loaded hook fires.
  *
  * Namespace-to-path mapping rules:
- *   - WDPLP\SomeClass            → includes/SomeClass.php   (root-level classes)
- *   - WDPLP\SubNs\SomeClass      → src/SubNs/SomeClass.php  (namespaced classes)
+ *   - WCPL\SomeClass            → includes/SomeClass.php   (root-level classes)
+ *   - WCPL\SubNs\SomeClass      → src/SubNs/SomeClass.php  (namespaced classes)
  *
  * The plugin directory is calculated relative to __DIR__ to avoid any
- * dependency on the WDPLP_PLUGIN_DIR constant, making the Autoloader
+ * dependency on the WCPL_PLUGIN_DIR constant, making the Autoloader
  * completely self-contained.
  *
- * @package WDPLP
+ * @package WCPL
  * @since   1.0.0
  */
 
-namespace WDPLP;
+namespace WCPL;
 
 // Autoloader must not be executed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,10 +29,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class Autoloader
  *
  * Registers a single spl_autoload_register callback that resolves every
- * class whose fully-qualified name begins with the "WDPLP\" prefix.
+ * class whose fully-qualified name begins with the "WCPL\" prefix.
  *
  * Usage (in the main plugin file, after require_once of this file):
- *   WDPLP\Autoloader::register();
+ *   WCPL\Autoloader::register();
  */
 final class Autoloader {
 
@@ -51,14 +51,14 @@ final class Autoloader {
 	 *
 	 * @var string
 	 */
-	private const NAMESPACE_PREFIX = 'WDPLP\\';
+	private const NAMESPACE_PREFIX = 'WCPL\\';
 
 	/**
 	 * Length of the namespace prefix (cached to avoid repeated strlen calls).
 	 *
 	 * @var int
 	 */
-	private const NAMESPACE_PREFIX_LEN = 6; // strlen('WDPLP\\')
+	private const NAMESPACE_PREFIX_LEN = 5; // strlen('WCPL\\')
 
 	/**
 	 * Register the autoloader callback with spl_autoload_register.
@@ -73,7 +73,7 @@ final class Autoloader {
 	 */
 	public static function register(): void {
 		// Calculate the plugin root directory once.
-		// __DIR__ is "…/woo_dynamic_pricelist_pro/includes", so dirname gives plugin root.
+		// __DIR__ is "…/woo_customers_price_list/includes", so dirname gives plugin root.
 		self::$plugin_dir = dirname( __DIR__ ) . DIRECTORY_SEPARATOR;
 
 		// Register our autoload callback. prepend=false keeps the default load order.
@@ -84,12 +84,12 @@ final class Autoloader {
 	 * Autoload callback — resolves a fully-qualified class name to a file path.
 	 *
 	 * Resolution logic:
-	 *   1. Ignore any class that does not start with "WDPLP\".
-	 *   2. Strip the "WDPLP\" prefix to get the relative class name.
+	 *   1. Ignore any class that does not start with "WCPL\".
+	 *   2. Strip the "WCPL\" prefix to get the relative class name.
 	 *   3. If the relative name contains NO namespace separator (\), the class
-	 *      lives in includes/ (e.g. WDPLP\Plugin → includes/Plugin.php).
+	 *      lives in includes/ (e.g. WCPL\Plugin → includes/Plugin.php).
 	 *   4. Otherwise the class lives in src/ and sub-directories mirror the
-	 *      sub-namespace (e.g. WDPLP\Admin\AdminController → src/Admin/AdminController.php).
+	 *      sub-namespace (e.g. WCPL\Admin\AdminController → src/Admin/AdminController.php).
 	 *   5. Replace any remaining "\" with the OS directory separator.
 	 *   6. Require the file if it exists; silently bail if it does not
 	 *      (other autoloaders in the stack may handle it).
@@ -103,7 +103,7 @@ final class Autoloader {
 			return;
 		}
 
-		// Step 2: strip the "WDPLP\" prefix.
+		// Step 2: strip the "WCPL\" prefix.
 		$relative = substr( $class, self::NAMESPACE_PREFIX_LEN );
 
 		// Step 3-5: determine the base directory and build the full file path.

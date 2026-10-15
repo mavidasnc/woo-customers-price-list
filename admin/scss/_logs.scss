@@ -1,13 +1,13 @@
 // =============================================================================
 // Log File Viewer — file selector form, meta info, terminal-style content area
 //
-// @package WDPLP
+// @package WCPL
 // @since   1.3.0
 // =============================================================================
 
 @use 'variables' as v;
 
-.wdplp-log-selector-form {
+.wcpl-log-selector-form {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -20,22 +20,22 @@
   }
 }
 
-.wdplp-log-meta {
+.wcpl-log-meta {
   margin-bottom: v.$spacing-sm;
   font-size: v.$font-size-sm;
   color: v.$color-wp-gray-mid;
 }
 
-.wdplp-log-filename {
+.wcpl-log-filename {
   font-family: v.$font-mono;
   font-weight: 600;
 }
 
-.wdplp-log-lines {
+.wcpl-log-lines {
   color: v.$color-wp-gray;
 }
 
-.wdplp-log-content {
+.wcpl-log-content {
   background: v.$color-wp-dark;
   color: v.$color-log-text;  // green-on-dark terminal aesthetic
   padding: 14px v.$spacing-lg;

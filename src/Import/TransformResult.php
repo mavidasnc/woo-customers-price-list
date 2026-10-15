@@ -13,11 +13,11 @@
  * by CsvTransformer and consumed by CsvImporter — keeping the two classes
  * loosely coupled.
  *
- * @package WDPLP\Import
+ * @package WCPL\Import
  * @since   1.0.0
  */
 
-namespace WDPLP\Import;
+namespace WCPL\Import;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
